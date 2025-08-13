@@ -5,17 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>EKKO - Agricultura Inteligente</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <style>
         :root {
-            --primary-green: #2E7D32;
-            --secondary-green: #4CAF50;
-            --tech-blue: #1976D2;
-            --light-green: #E8F5E8;
-            --dark-gray: #333;
-            --light-gray: #f5f5f5;
+            --primary-green: #059669;
+            --secondary-green: #10B981;
+            --tech-blue: #3B82F6;
+            --purple: #8B5CF6;
+            --orange: #F59E0B;
+            --red: #EF4444;
+            --indigo: #6366F1;
+            --teal: #14B8A6;
+            --pink: #EC4899;
+            --emerald: #10B981;
+            --cyan: #06B6D4;
+            --amber: #F59E0B;
+            
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
             --white: #ffffff;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --border-radius: 12px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --border-radius: 16px;
+            --border-radius-lg: 20px;
         }
 
         * {
@@ -25,59 +50,164 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--light-green) 0%, #f0f8f0 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--gray-50) 0%, #ffffff 100%);
             min-height: 100vh;
-            color: var(--dark-gray);
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
-            color: var(--white);
-            padding: 1.5rem 0;
-            box-shadow: var(--shadow);
-        }
-
-        .header-content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
+            color: var(--gray-800);
+            margin: 0;
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(180deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            color: var(--white);
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+        }
+
+        .sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .logo {
-            font-size: 2rem;
-            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .logo-subtitle {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            opacity: 0.7;
+            font-weight: 400;
+            letter-spacing: 0.025em;
+        }
+
+        .nav-menu {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 0 12px 12px 0;
+            margin: 2px 0;
+        }
+
+        .nav-item:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--white);
+            transform: translateX(4px);
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+            color: var(--white);
+            border-right: 3px solid var(--secondary-green);
+            transform: translateX(4px);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .page-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin: 0;
+            letter-spacing: -0.025em;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: #666;
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            font-weight: 400;
+            margin-top: 0.25rem;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
             padding: 2rem;
+            max-width: none;
         }
 
         .search-section {
             background: var(--white);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
+            padding: 3rem 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
             margin-bottom: 2rem;
             text-align: center;
+            border: 1px solid var(--gray-100);
         }
 
         .search-title {
-            color: var(--primary-green);
-            margin-bottom: 1.5rem;
-            font-size: 1.5rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--gray-900);
+            margin-bottom: 2rem;
+            font-size: 1.75rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            letter-spacing: -0.025em;
         }
 
         .search-form {
@@ -95,16 +225,19 @@
         .input-group input {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid #e0e0e0;
+            border: 2px solid var(--gray-200);
             border-radius: var(--border-radius);
             font-size: 1rem;
-            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--gray-50);
         }
 
         .input-group input:focus {
             outline: none;
-            border-color: var(--secondary-green);
-            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+            background: var(--white);
         }
 
         .input-group i {
@@ -116,151 +249,46 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%);
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
             color: var(--white);
             border: none;
             padding: 1rem 2rem;
             border-radius: var(--border-radius);
             font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: var(--shadow);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: var(--shadow-lg);
+            background: linear-gradient(135deg, var(--secondary-green) 0%, var(--primary-green) 100%);
         }
 
-        .profile-section {
+        .content-section {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
             display: none;
-            animation: fadeIn 0.5s ease;
+            border: 1px solid var(--gray-100);
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .profile-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .profile-card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        .card-title {
-            color: var(--primary-green);
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark-gray);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--secondary-green);
-        }
-
-        .form-group input[readonly] {
-            background-color: #f8f8f8;
-            color: #666;
-        }
-
-        .readings-section {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-
-        .readings-title {
-            color: var(--primary-green);
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .table-container {
-            overflow-x: auto;
-            border-radius: 8px;
-            border: 1px solid #e0e0e0;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--white);
-        }
-
-        th {
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
-            color: var(--white);
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-        }
-
-        td {
-            padding: 1rem;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        tr:hover {
-            background-color: var(--light-green);
-        }
-
-        .btn-update {
-            background: linear-gradient(135deg, var(--tech-blue) 0%, #1565C0 100%);
-            color: var(--white);
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: var(--border-radius);
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 2rem auto 0;
-        }
-
-        .btn-update:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
         .message {
@@ -269,6 +297,11 @@
             margin-top: 1rem;
             text-align: center;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            animation: slideIn 0.3s ease;
         }
 
         .message.success {
@@ -283,122 +316,98 @@
             border: 1px solid #f5c6cb;
         }
 
-        .footer {
-            text-align: center;
-            padding: 2rem;
-            color: #666;
-            border-top: 1px solid #e0e0e0;
-            margin-top: 3rem;
-        }
-
-        .dashboard-section {
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .dashboard-card {
-            background: var(--white);
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-        }
-
-        #status-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-        }
-
-        .status-card {
-            text-align: center;
-            padding: 1rem;
-            background: var(--light-green);
-            border-radius: 8px;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .status-card.status-ok {
-            border-color: var(--secondary-green);
-            background: #e8f5e8;
-        }
-
-        .status-card.status-warning {
-            border-color: #ff9800;
-            background: #fff3e0;
-        }
-
-        .status-card.status-critical {
-            border-color: #f44336;
-            background: #ffebee;
-        }
-
-        .status-icon {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .status-value {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--primary-green);
-            margin-bottom: 0.3rem;
-        }
-
-        .status-label {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .diagnostico-item {
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            border-radius: 8px;
-            border-left: 4px solid var(--secondary-green);
-        }
-
-        .diagnostico-item.critico {
-            background: #ffebee;
-            border-left-color: #f44336;
-        }
-
-        .diagnostico-item.atencao {
-            background: #fff3e0;
-            border-left-color: #ff9800;
-        }
-
-        .diagnostico-item.ok {
-            background: #e8f5e8;
-            border-left-color: var(--secondary-green);
-        }
-
-        .sugestao-item {
-            padding: 0.6rem;
-            margin: 0.3rem 0;
-            background: #f0f8f0;
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
         .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gray-900);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .tooltip:hover::before {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: var(--gray-900);
+            z-index: 1000;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-state {
+            background: #ffebee;
+            border: 1px solid #ffcdd2;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            color: #c62828;
+        }
+
+        .empty-state {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 2rem;
             text-align: center;
             color: #666;
-            padding: 2rem;
         }
 
         @media (max-width: 768px) {
-            .profile-grid, .dashboard-grid {
-                grid-template-columns: 1fr;
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
             }
-            
-            #status-cards {
-                grid-template-columns: 1fr;
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
             }
             
             .search-form {
@@ -412,468 +421,1274 @@
     </style>
 </head>
 <body>
-    <header class="header">
-        <div class="header-content">
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
             <div class="logo">
                 <i class="fas fa-seedling"></i>
                 EKKO
             </div>
+            <div class="logo-subtitle">Agricultura Inteligente</div>
+        </div>
+        
+        <nav class="nav-menu">
+            <button class="nav-item active" onclick="showSection('search', this)">
+                <i class="fas fa-search"></i>
+                <span>Buscar Usuário</span>
+            </button>
+            <button class="nav-item" onclick="showSection('dashboard', this)" id="nav-dashboard" style="display:none;">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </button>
+            <button class="nav-item" onclick="showSection('profile', this)" id="nav-profile" style="display:none;">
+                <i class="fas fa-user-circle"></i>
+                <span>Perfil</span>
+            </button>
+            <button class="nav-item" onclick="showSection('ai', this)" id="nav-ai" style="display:none;">
+                <i class="fas fa-robot"></i>
+                <span>Diagnóstico IA</span>
+            </button>
+            <button class="nav-item" onclick="showSection('heatmap', this)" id="nav-heatmap" style="display:none;">
+                <i class="fas fa-fire"></i>
+                <span>Mapa de Calor</span>
+            </button>
+            <button class="nav-item" onclick="showSection('readings', this)" id="nav-readings" style="display:none;">
+                <i class="fas fa-chart-line"></i>
+                <span>Histórico</span>
+            </button>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <div class="top-bar">
             <div>
-                <h1>Agricultura Inteligente</h1>
-                <p>Monitoramento e Gestão de Solo em Tempo Real</p>
+                <h1 class="page-title" id="page-title">Buscar Usuário</h1>
+                <div class="breadcrumb" id="breadcrumb">Início > Buscar Usuário</div>
+            </div>
+            <div class="user-info">
+                <!-- Removido Sistema EKKO -->
             </div>
         </div>
-    </header>
 
-    <div class="container">
-        <section class="search-section">
-            <h2 class="search-title">
-                <i class="fas fa-search"></i>
-                Buscar Perfil do Usuário
-            </h2>
-            <div class="search-form">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="userId" placeholder="Digite o ID do usuário" />
+        <div class="container">
+            <!-- Seção de Busca -->
+            <section id="search-section" class="content-section active">
+                <div class="search-section">
+                    <h2 class="search-title">
+                        <i class="fas fa-search"></i>
+                        Buscar Perfil do Usuário
+                    </h2>
+                    <div class="search-form">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="userId" placeholder="Digite o ID do usuário" value="689b90f60e5b30bcc5577b43" />
+                        </div>
+                        <button class="btn-primary" onclick="buscarPerfil()">
+                            <i class="fas fa-search"></i>
+                            Buscar
+                        </button>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #666; text-align: center; margin-top: 1rem;">
+                        💡 IDs de teste: 689b90f60e5b30bcc5577b43, 689b90f60e5b30bcc5577b4b, 689b90f60e5b30bcc5577b53
+                    </p>
                 </div>
-                <button class="btn-primary" onclick="buscarPerfil()">
-                    <i class="fas fa-search"></i>
-                    Buscar
-                </button>
-            </div>
-        </section>
+            </section>
 
-        <section id="perfil" class="profile-section">
-            <form id="formPerfil" onsubmit="atualizarPerfil(event)">
-                <div class="profile-grid">
-                    <div class="profile-card">
-                        <h3 class="card-title">
-                            <i class="fas fa-user-circle"></i>
-                            Dados Pessoais
-                        </h3>
-                        <div class="form-group">
-                            <label for="nome">Nome Completo</label>
-                            <input type="text" id="nome" name="nome" />
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" />
-                        </div>
-                        <div class="form-group">
-                            <label for="papel">Função</label>
-                            <input type="text" id="papel" name="papel" />
-                        </div>
-                    </div>
-
-                    <div class="profile-card">
-                        <h3 class="card-title">
-                            <i class="fas fa-tractor"></i>
-                            Dados da Propriedade
-                        </h3>
-                        <div class="form-group">
-                            <label for="nome_fazenda">Nome da Fazenda</label>
-                            <input type="text" id="nome_fazenda" name="nome_fazenda" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="localizacao">Localização</label>
-                            <input type="text" id="localizacao" name="localizacao" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="cultivo_principal">Cultivo Principal</label>
-                            <input type="text" id="cultivo_principal" name="cultivo_principal" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="area_total">Área Total (ha)</label>
-                            <input type="text" id="area_total" name="area_total" readonly />
-                        </div>
-                    </div>
-                    
-                    <div class="profile-card">
-                        <h3 class="card-title">
-                            <i class="fas fa-user-tie"></i>
-                            Dados Técnicos
-                        </h3>
-                        <div class="form-group">
-                            <label for="experiencia">Experiência (anos)</label>
-                            <input type="text" id="experiencia" name="experiencia" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="nivel_tecnologia">Nível Tecnológico</label>
-                            <input type="text" id="nivel_tecnologia" name="nivel_tecnologia" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="certificacoes">Certificações</label>
-                            <input type="text" id="certificacoes" name="certificacoes" readonly />
-                        </div>
-                    </div>
-                    
-                    <div class="profile-card">
-                        <h3 class="card-title">
-                            <i class="fas fa-id-card"></i>
-                            Informações Pessoais
-                        </h3>
-                        <div class="form-group">
-                            <label for="cpf">CPF</label>
-                            <input type="text" id="cpf" name="cpf" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="telefone">Telefone</label>
-                            <input type="text" id="telefone" name="telefone" readonly />
-                        </div>
-                        <div class="form-group">
-                            <label for="data_nascimento">Data de Nascimento</label>
-                            <input type="text" id="data_nascimento" name="data_nascimento" readonly />
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-update">
-                    <i class="fas fa-save"></i>
-                    Atualizar Perfil
-                </button>
-            </form>
-            
-            <div id="mensagem"></div>
-        </section>
-
-        <section id="dashboard" class="dashboard-section" style="display:none;">
-            <div class="dashboard-grid">
-                <div class="dashboard-card">
-                    <h3 class="card-title">
-                        <i class="fas fa-robot"></i>
-                        Diagnóstico IA
-                    </h3>
-                    <div id="diagnostico-content">
-                        <div class="loading">Carregando análise...</div>
-                    </div>
-                </div>
-                
-                <div class="dashboard-card">
-                    <h3 class="card-title">
+            <!-- Dashboard -->
+            <section id="dashboard-section" class="content-section">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
                         <i class="fas fa-tachometer-alt"></i>
-                        Status Atual
-                    </h3>
-                    <div id="status-cards">
-                        <div class="status-card">
-                            <div class="status-icon ph-status">pH</div>
-                            <div class="status-value" id="ph-value">-</div>
-                            <div class="status-label">Acidez</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-icon umidade-status">💧</div>
-                            <div class="status-value" id="umidade-value">-</div>
-                            <div class="status-label">Umidade</div>
-                        </div>
-                        <div class="status-card">
-                            <div class="status-icon temp-status">🌡️</div>
-                            <div class="status-value" id="temp-value">-</div>
-                            <div class="status-label">Temperatura</div>
-                        </div>
                     </div>
+                    <h2 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em;">Dashboard</h2>
                 </div>
-            </div>
-        </section>
+                <div id="dashboard-content">
+                    <p>Carregando dados do usuário...</p>
+                </div>
+            </section>
 
-        <section id="readings" class="readings-section" style="display:none;">
-            <h3 class="readings-title">
-                <i class="fas fa-chart-line"></i>
-                Histórico de Leituras
-            </h3>
-            <div class="table-container">
-                <table id="tabelaLeituras">
-                    <thead>
-                        <tr>
-                            <th><i class="fas fa-calendar"></i> Data/Hora</th>
-                            <th><i class="fas fa-flask"></i> pH</th>
-                            <th><i class="fas fa-tint"></i> Umidade (%)</th>
-                            <th><i class="fas fa-thermometer-half"></i> Temp (°C)</th>
-                            <th><i class="fas fa-bolt"></i> Condutividade</th>
-                            <th><i class="fas fa-water"></i> Salinidade</th>
-                            <th><i class="fas fa-leaf"></i> NPK</th>
-                            <th><i class="fas fa-seedling"></i> Micronutrientes</th>
-                            <th><i class="fas fa-percentage"></i> Mat. Orgânica</th>
-                            <th><i class="fas fa-weight"></i> Densidade</th>
-                            <th><i class="fas fa-signal"></i> Sinal</th>
-                            <th><i class="fas fa-battery-half"></i> Bateria</th>
-                            <th><i class="fas fa-map-marker"></i> Sensor</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
+            <!-- Perfil -->
+            <section id="profile-section" class="content-section">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--orange), var(--amber)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h2 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em;">Perfil do Usuário</h2>
+                </div>
+                <div id="profile-content">
+                    <p>Carregando perfil...</p>
+                </div>
+                <div id="mensagem"></div>
+            </section>
 
-    <footer class="footer">
-        <p><i class="fas fa-seedling"></i> EKKO - Agricultura Inteligente © 2024</p>
-        <p>Tecnologia a serviço do campo</p>
-    </footer>
+            <!-- Diagnóstico IA -->
+            <section id="ai-section" class="content-section">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--purple), var(--indigo)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em;">Diagnóstico Inteligente</h2>
+                </div>
+                <div id="ai-content">
+                    <p>Carregando análise de IA...</p>
+                </div>
+            </section>
+
+            <!-- Mapa de Calor -->
+            <section id="heatmap-section" class="content-section">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--red), var(--pink)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h2 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em;">Mapas de Calor</h2>
+                </div>
+                <div id="heatmap-content">
+                    <p>Carregando mapas de calor...</p>
+                </div>
+            </section>
+
+            <!-- Histórico -->
+            <section id="readings-section" class="content-section">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                    <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--tech-blue), var(--cyan)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h2 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 2rem; font-weight: 600; letter-spacing: -0.025em;">Histórico de Leituras</h2>
+                </div>
+                <div id="readings-content">
+                    <p>Carregando histórico...</p>
+                </div>
+            </section>
+        </div>
+    </main>
 
     <script>
         const baseUrl = "http://127.0.0.1:8000";
+        
+        // Verificar conectividade da API
+        async function checkAPIConnection() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 3000);
+                
+                const response = await fetch(`${baseUrl}/`, { 
+                    method: 'GET',
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (response.ok) {
+                    console.log('[OK] API conectada');
+                    return true;
+                }
+                return false;
+            } catch (error) {
+                console.error('[ERRO] API desconectada:', error);
+                return false;
+            }
+        }
+        
+        // Verificar conexão ao carregar a página
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAPIConnection();
+            
+            // Adicionar evento Enter no campo de busca
+            const userIdInput = document.getElementById('userId');
+            if (userIdInput) {
+                userIdInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        buscarPerfil();
+                    }
+                });
+            }
+        });
 
-        function showMessage(text, type = 'success') {
+        function showMessage(text, type = 'success', duration = 5000) {
             const messageDiv = document.getElementById("mensagem");
-            messageDiv.className = `message ${type}`;
-            messageDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${text}`;
+            if (messageDiv) {
+                messageDiv.className = `message ${type}`;
+                messageDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"></i> ${text}`;
+                messageDiv.style.display = 'flex';
+                
+                if (duration > 0) {
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, duration);
+                }
+            }
+        }
+
+        function showLoading(elementId, text = 'Carregando...') {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = `<div class="loading"><i class="fas fa-spinner"></i> ${text}</div>`;
+            }
+        }
+
+        function showError(elementId, message = 'Erro ao carregar dados') {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h3 style="margin-bottom: 0.5rem;">Ops! Algo deu errado</h3>
+                        <p>${message}</p>
+                        <button class="btn-primary" onclick="location.reload()" style="margin-top: 1rem;">
+                            <i class="fas fa-redo"></i> Tentar Novamente
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        function showEmpty(elementId, message = 'Nenhum dado encontrado') {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                        <h3 style="margin-bottom: 0.5rem; opacity: 0.7;">Sem dados</h3>
+                        <p style="opacity: 0.6;">${message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function showSection(sectionId, clickedElement = null) {
+            // Esconder todas as seções
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remover classe active de todos os nav-items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Mostrar seção selecionada
+            const targetSection = document.getElementById(sectionId + '-section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Ativar item de navegação clicado
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            } else if (window.event && window.event.target) {
+                const navItem = window.event.target.closest('.nav-item');
+                if (navItem) navItem.classList.add('active');
+            }
+            
+            // Atualizar título
+            const titles = {
+                'search': 'Buscar Usuário',
+                'dashboard': 'Dashboard',
+                'profile': 'Perfil',
+                'ai': 'Diagnóstico IA',
+                'heatmap': 'Mapa de Calor',
+                'readings': 'Histórico'
+            };
+            
+            if (titles[sectionId]) {
+                document.getElementById('page-title').textContent = titles[sectionId];
+                document.getElementById('breadcrumb').textContent = `Início > ${titles[sectionId]}`;
+            }
+        }
+
+        function showNavigation() {
+            document.getElementById('nav-dashboard').style.display = 'block';
+            document.getElementById('nav-profile').style.display = 'block';
+            document.getElementById('nav-ai').style.display = 'block';
+            document.getElementById('nav-heatmap').style.display = 'block';
+            document.getElementById('nav-readings').style.display = 'block';
         }
 
         async function buscarPerfil() {
             const userId = document.getElementById("userId").value.trim();
+            const searchButton = document.querySelector('.btn-primary');
+            
             if (!userId) {
                 showMessage("Por favor, digite o ID do usuário.", 'error');
                 return;
             }
             
+            searchButton.disabled = true;
+            searchButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+            
+            showLoading('dashboard-content', 'Carregando dados do usuário...');
+            showLoading('profile-content', 'Carregando perfil...');
+            showLoading('ai-content', 'Carregando análise de IA...');
+            showLoading('heatmap-content', 'Carregando mapas de calor...');
+            showLoading('readings-content', 'Carregando histórico...');
+            
             try {
-                const response = await fetch(`${baseUrl}/perfil/${userId}`);
+                // Fazer requisição com timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 15000);
+                
+                const response = await fetch(`${baseUrl}/perfil/${userId}`, {
+                    signal: controller.signal,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                clearTimeout(timeoutId);
+                
                 if (!response.ok) {
-                    const errorData = await response.json();
+                    const errorData = await response.json().catch(() => ({ detail: 'Erro desconhecido' }));
                     showMessage(`Erro ao buscar perfil: ${errorData.detail}`, 'error');
+                    
+                    showError('dashboard-content', 'Não foi possível carregar os dados do usuário');
+                    showError('profile-content', 'Não foi possível carregar o perfil');
+                    showError('ai-content', 'Não foi possível carregar a análise de IA');
+                    showError('heatmap-content', 'Não foi possível carregar os mapas de calor');
+                    showError('readings-content', 'Não foi possível carregar o histórico');
                     return;
                 }
                 
                 const perfil = await response.json();
                 
-                // Preencher dados pessoais
-                document.getElementById("nome").value = perfil.nome || "";
-                document.getElementById("email").value = perfil.email || "";
-                document.getElementById("papel").value = perfil.papel || "";
-                
-                // Preencher dados da propriedade
-                document.getElementById("nome_fazenda").value = perfil.nome_fazenda || "";
-                
-                // Formatar localização completa
-                const loc = perfil.localizacao || {};
-                const localizacaoCompleta = `${loc.cidade || ''}, ${loc.estado || ''} - ${loc.regiao || ''}`;
-                document.getElementById("localizacao").value = localizacaoCompleta;
-                
-                // Preencher dados da propriedade
-                const prop = perfil.propriedade || {};
-                document.getElementById("cultivo_principal").value = prop.cultivo_principal || "";
-                document.getElementById("area_total").value = prop.area_total_hectares ? `${prop.area_total_hectares} ha` : "";
-                
-                // Preencher dados técnicos
-                const tecnico = perfil.dados_tecnicos || {};
-                document.getElementById("experiencia").value = tecnico.experiencia_anos ? `${tecnico.experiencia_anos} anos` : "";
-                document.getElementById("nivel_tecnologia").value = tecnico.nivel_tecnologia || "";
-                document.getElementById("certificacoes").value = Array.isArray(tecnico.certificacoes) ? tecnico.certificacoes.join(", ") : "";
-                
-                // Preencher informações pessoais
-                document.getElementById("cpf").value = perfil.cpf || "";
-                document.getElementById("telefone").value = perfil.telefone || "";
-                document.getElementById("data_nascimento").value = perfil.data_nascimento ? new Date(perfil.data_nascimento).toLocaleDateString('pt-BR') : "";
-                
-                // Mostrar seções
-                document.getElementById("perfil").style.display = "block";
-                document.getElementById("dashboard").style.display = "block";
-                document.getElementById("readings").style.display = "block";
-                document.getElementById("mensagem").innerHTML = "";
-                
-                // Carregar diagnóstico IA
-                carregarDiagnostico(userId);
-                
-                // Atualizar status cards
-                atualizarStatusCards(perfil.leituras_solo);
-                
-                // Preencher leituras de solo
-                if (perfil.leituras_solo && Array.isArray(perfil.leituras_solo)) {
-                    preencherTabelaLeituras(perfil.leituras_solo);
-                } else {
-                    limparTabelaLeituras();
-                }
-                
-                showMessage("Perfil carregado com sucesso!", 'success');
-                
-            } catch (error) {
-                showMessage("Erro ao conectar com a API.", 'error');
-            }
-        }
-
-        async function atualizarPerfil(event) {
-            event.preventDefault();
-            const userId = document.getElementById("userId").value.trim();
-            const nome = document.getElementById("nome").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const papel = document.getElementById("papel").value.trim();
-
-            const dados = {};
-            if (nome) dados.nome = nome;
-            if (email) dados.email = email;
-            if (papel) dados.papel = papel;
-
-            if (Object.keys(dados).length === 0) {
-                showMessage("Nenhum dado foi alterado.", 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch(`${baseUrl}/perfil/${userId}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(dados),
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    showMessage(`Erro: ${errorData.detail}`, 'error');
+                if (!perfil || !perfil.nome) {
+                    showMessage('Dados do perfil incompletos ou inválidos', 'error');
                     return;
                 }
                 
-                showMessage("Perfil atualizado com sucesso!", 'success');
+                showNavigation();
+                window.currentUserData = perfil;
+                
+                try {
+                    loadDashboardContent(perfil);
+                } catch (e) {
+                    showError('dashboard-content', 'Erro ao processar dados do dashboard');
+                }
+                
+                try {
+                    loadProfileContent(perfil);
+                } catch (e) {
+                    showError('profile-content', 'Erro ao processar dados do perfil');
+                }
+                
+                try {
+                    loadReadingsContent(perfil);
+                } catch (e) {
+                    showError('readings-content', 'Erro ao processar histórico de leituras');
+                }
+                
+                // Carregar IA de forma assíncrona sem bloquear
+                setTimeout(() => {
+                    loadAIContent(userId).catch(() => {
+                        showError('ai-content', 'Sistema de IA temporariamente indisponível');
+                    });
+                }, 100);
+                
+                try {
+                    loadHeatmapContent(perfil);
+                } catch (e) {
+                    showError('heatmap-content', 'Erro ao gerar mapas de calor');
+                }
+                
+                showSection('dashboard', document.getElementById('nav-dashboard'));
+                showMessage(`Perfil de ${perfil.nome} carregado com sucesso!`, 'success', 3000);
                 
             } catch (error) {
-                showMessage("Erro ao conectar com a API.", 'error');
+                console.error('Erro na busca:', error);
+                let errorMsg = "Erro ao conectar com a API.";
+                
+                if (error.name === 'AbortError') {
+                    errorMsg = "Timeout: A requisição demorou muito para responder.";
+                } else if (error.name === 'TypeError') {
+                    errorMsg = "Servidor não encontrado. Verifique se a API está rodando na porta 8000.";
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMsg = "Falha na conexão. Verifique se a API está rodando.";
+                }
+                
+                showMessage(errorMsg, 'error', 0);
+                
+                showError('dashboard-content', 'Falha na conexão com o servidor');
+                showError('profile-content', 'Falha na conexão com o servidor');
+                showError('ai-content', 'Falha na conexão com o servidor');
+                showError('heatmap-content', 'Falha na conexão com o servidor');
+                showError('readings-content', 'Falha na conexão com o servidor');
+            } finally {
+                searchButton.disabled = false;
+                searchButton.innerHTML = '<i class="fas fa-search"></i> Buscar';
             }
         }
 
-        function preencherTabelaLeituras(leituras) {
-            const tbody = document.querySelector("#tabelaLeituras tbody");
-            tbody.innerHTML = "";
+        function loadDashboardContent(perfil) {
+            const leituras = perfil.leituras_solo || [];
+            const ultimaLeitura = leituras[0] || {};
+            const npk = ultimaLeitura.NPK || {};
+            const micro = ultimaLeitura.micronutrientes || {};
+            
+            document.getElementById('dashboard-content').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                    <!-- Card Usuário -->
+                    <div style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(5, 150, 105, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">${perfil.nome}</h3>
+                        </div>
+                        <div style="space-y: 0.75rem; font-size: 0.95rem; color: var(--gray-700);">
+                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-tractor" style="color: var(--primary-green); width: 16px;"></i> <strong>Fazenda:</strong> ${perfil.nome_fazenda || 'N/A'}</p>
+                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-envelope" style="color: var(--primary-green); width: 16px;"></i> <strong>Email:</strong> ${perfil.email}</p>
+                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-user-tag" style="color: var(--primary-green); width: 16px;"></i> <strong>Papel:</strong> ${perfil.papel}</p>
+                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-phone" style="color: var(--primary-green); width: 16px;"></i> <strong>Telefone:</strong> ${perfil.telefone || 'N/A'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Última Leitura -->
+                    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--amber), var(--orange)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Última Leitura</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem; color: var(--gray-700);">
+                            <div class="tooltip" data-tooltip="Acidez/alcalinidade do solo (ideal: 6.0-7.0)" style="padding: 0.75rem; border-radius: 8px;"><strong>pH:</strong> ${Number(ultimaLeitura.pH || ultimaLeitura.ph || 0).toFixed(1)}</div>
+                            <div class="tooltip" data-tooltip="Percentual de água no solo (ideal: 60-80%)" style="padding: 0.75rem; border-radius: 8px;"><strong>Umidade:</strong> ${Number(ultimaLeitura.umidade || 0).toFixed(1)}%</div>
+                            <div class="tooltip" data-tooltip="Temperatura do solo em graus Celsius (ideal: 20-30°C)" style="padding: 0.75rem; border-radius: 8px;"><strong>Temp:</strong> ${Number(ultimaLeitura.temperatura || 0).toFixed(1)}°C</div>
+                            <div class="tooltip" data-tooltip="Capacidade de conduzir eletricidade (mS/cm)" style="padding: 0.75rem; border-radius: 8px;"><strong>Condutiv:</strong> ${Number(ultimaLeitura.condutividade_eletrica || 0).toFixed(2)}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card NPK -->
+                    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--tech-blue), var(--indigo)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">NPK & Nutrientes</h3>
+                        </div>
+                        <div style="font-size: 0.9rem; color: var(--gray-700); space-y: 0.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                                <span class="tooltip" data-tooltip="Nutriente essencial para crescimento vegetativo"><strong>Nitrogênio:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${Number(npk.nitrogenio || 0).toFixed(1)} ppm</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1);">
+                                <span class="tooltip" data-tooltip="Nutriente essencial para desenvolvimento radicular"><strong>Fósforo:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${Number(npk.fosforo || 0).toFixed(1)} ppm</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
+                                <span class="tooltip" data-tooltip="Nutriente essencial para floração e frutificação"><strong>Potássio:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${Number(npk.potassio || 0).toFixed(1)} ppm</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Estatísticas -->
+                    <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(196, 181, 253, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(139, 92, 246, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--purple), var(--indigo)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Estatísticas</h3>
+                        </div>
+                        <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-700); space-y: 0.75rem;">
+                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Total de Leituras:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600; color: var(--purple);">${leituras.length}</span>
+                            </div>
+                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Área Total:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${perfil.propriedade?.area_total_hectares || 0} ha</span>
+                            </div>
+                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Área Cultivada:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${perfil.propriedade?.area_cultivada_hectares || 0} ha</span>
+                            </div>
+                            <p style="margin: 0.5rem 0;"><strong>Cultivo Principal:</strong> ${perfil.propriedade?.cultivo_principal || 'N/A'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Localização -->
+                    <div style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(94, 234, 212, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(20, 184, 166, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--teal), var(--cyan)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Localização</h3>
+                        </div>
+                        <div style="font-size: 0.95rem; color: var(--gray-700); space-y: 0.75rem;">
+                            <p style="margin: 0.5rem 0;"><strong>Cidade:</strong> ${perfil.localizacao?.cidade || 'N/A'}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Estado:</strong> ${perfil.localizacao?.estado || 'N/A'}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Região:</strong> ${perfil.localizacao?.regiao || 'N/A'}</p>
+                            <p style="margin: 0.5rem 0;"><strong>CEP:</strong> ${perfil.localizacao?.cep || 'N/A'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Card Dados Técnicos -->
+                    <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(251, 207, 232, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(236, 72, 153, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--pink), var(--purple)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Dados Técnicos</h3>
+                        </div>
+                        <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-700); space-y: 0.75rem;">
+                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
+                                <span><strong>Experiência:</strong></span>
+                                <span style="font-family: 'Inter', sans-serif; font-weight: 600; color: var(--pink);">${perfil.dados_tecnicos?.experiencia_anos || 0} anos</span>
+                            </div>
+                            <p style="margin: 0.5rem 0;"><strong>Nível Tecnológico:</strong> ${perfil.dados_tecnicos?.nivel_tecnologia || 'N/A'}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Tipo de Solo:</strong> ${perfil.propriedade?.tipo_solo || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                ${ultimaLeitura.dispositivo ? `
+                <!-- Card Sensor -->
+                <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(165, 243, 252, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(6, 182, 212, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); margin-top: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--cyan), var(--tech-blue)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                            <i class="fas fa-satellite-dish"></i>
+                        </div>
+                        <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Informações do Sensor</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; font-size: 0.95rem; color: var(--gray-700);">
+                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Dispositivo:</strong> <span style="font-family: 'JetBrains Mono', monospace;">${ultimaLeitura.dispositivo || 'N/A'}</span></div>
+                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Setor:</strong> ${ultimaLeitura.localizacao_sensor?.setor || 'N/A'}</div>
+                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Profundidade:</strong> ${ultimaLeitura.localizacao_sensor?.profundidade_cm || 0} cm</div>
+                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Qualidade Sinal:</strong> ${ultimaLeitura.qualidade_sinal || 'N/A'}</div>
+                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Bateria:</strong> ${ultimaLeitura.bateria_sensor_pct || 0}%</div>
+                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Densidade Solo:</strong> ${Number(ultimaLeitura.densidade_solo || 0).toFixed(2)} g/cm³</div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+
+        function loadProfileContent(perfil) {
+            const loc = perfil.localizacao || {};
+            const prop = perfil.propriedade || {};
+            const tecnico = perfil.dados_tecnicos || {};
+            const dataNascimento = perfil.data_nascimento ? new Date(perfil.data_nascimento).toLocaleDateString('pt-BR') : 'N/A';
+            const dataCadastro = perfil.data_cadastro ? new Date(perfil.data_cadastro).toLocaleDateString('pt-BR') : 'N/A';
+            
+            document.getElementById('profile-content').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                    <!-- Dados Pessoais -->
+                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--primary-green);">
+                        <h3 style="color: var(--primary-green); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-user-circle"></i> Dados Pessoais
+                        </h3>
+                        <div style="space-y: 0.8rem;">
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-user" style="width: 20px; color: #666;"></i> <strong>Nome:</strong> ${perfil.nome || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-envelope" style="width: 20px; color: #666;"></i> <strong>Email:</strong> ${perfil.email || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-id-card" style="width: 20px; color: #666;"></i> <strong>CPF:</strong> ${perfil.cpf || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-phone" style="width: 20px; color: #666;"></i> <strong>Telefone:</strong> ${perfil.telefone || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-birthday-cake" style="width: 20px; color: #666;"></i> <strong>Data Nascimento:</strong> ${dataNascimento}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-user-tag" style="width: 20px; color: #666;"></i> <strong>Papel:</strong> ${perfil.papel || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-calendar-plus" style="width: 20px; color: #666;"></i> <strong>Data Cadastro:</strong> ${dataCadastro}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-check-circle" style="width: 20px; color: #666;"></i> <strong>Status:</strong> ${perfil.status || 'ativo'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Localização -->
+                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #ff9800;">
+                        <h3 style="color: #ff9800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-map-marker-alt"></i> Localização
+                        </h3>
+                        <div style="space-y: 0.8rem;">
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-road" style="width: 20px; color: #666;"></i> <strong>Endereço:</strong> ${loc.endereco || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-city" style="width: 20px; color: #666;"></i> <strong>Cidade:</strong> ${loc.cidade || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-flag" style="width: 20px; color: #666;"></i> <strong>Estado:</strong> ${loc.estado || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-globe-americas" style="width: 20px; color: #666;"></i> <strong>Região:</strong> ${loc.regiao || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-mail-bulk" style="width: 20px; color: #666;"></i> <strong>CEP:</strong> ${loc.cep || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-crosshairs" style="width: 20px; color: #666;"></i> <strong>Latitude:</strong> ${loc.coordenadas?.latitude ? Number(loc.coordenadas.latitude).toFixed(6) : 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-crosshairs" style="width: 20px; color: #666;"></i> <strong>Longitude:</strong> ${loc.coordenadas?.longitude ? Number(loc.coordenadas.longitude).toFixed(6) : 'N/A'}</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Propriedade -->
+                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--tech-blue);">
+                        <h3 style="color: var(--tech-blue); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-tractor"></i> Propriedade
+                        </h3>
+                        <div style="space-y: 0.8rem;">
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-home" style="width: 20px; color: #666;"></i> <strong>Nome da Fazenda:</strong> ${perfil.nome_fazenda || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-expand-arrows-alt" style="width: 20px; color: #666;"></i> <strong>Área Total:</strong> ${prop.area_total_hectares || 0} hectares</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-seedling" style="width: 20px; color: #666;"></i> <strong>Área Cultivada:</strong> ${prop.area_cultivada_hectares || 0} hectares</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-leaf" style="width: 20px; color: #666;"></i> <strong>Cultivo Principal:</strong> ${prop.cultivo_principal || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-list" style="width: 20px; color: #666;"></i> <strong>Cultivos Secundários:</strong> ${Array.isArray(prop.cultivos_secundarios) ? prop.cultivos_secundarios.join(', ') || 'Nenhum' : 'Nenhum'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-mountain" style="width: 20px; color: #666;"></i> <strong>Tipo de Solo:</strong> ${prop.tipo_solo || 'N/A'}</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-tint" style="width: 20px; color: #666;"></i> <strong>Sistema de Irrigação:</strong> ${prop.sistema_irrigacao || 'N/A'}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dados Técnicos - Card largo -->
+                <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #4caf50; margin-top: 2rem;">
+                    <h3 style="color: #4caf50; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-cogs"></i> Dados Técnicos
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-clock" style="width: 20px; color: #666;"></i> <strong>Experiência:</strong> ${tecnico.experiencia_anos || 0} anos</p>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-chart-line" style="width: 20px; color: #666;"></i> <strong>Nível Tecnológico:</strong> ${tecnico.nivel_tecnologia || 'N/A'}</p>
+                        </div>
+                        <div>
+                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-certificate" style="width: 20px; color: #666;"></i> <strong>Certificações:</strong> ${Array.isArray(tecnico.certificacoes) ? tecnico.certificacoes.join(', ') || 'Nenhuma' : 'Nenhuma'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadReadingsContent(perfil) {
+            const leituras = perfil.leituras_solo || [];
             
             if (leituras.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #666;">Nenhuma leitura encontrada</td></tr>';
+                showEmpty('readings-content', 'Nenhuma leitura de solo encontrada para este usuário');
                 return;
             }
             
-            leituras.forEach((leitura) => {
-                const tr = document.createElement("tr");
-                const data = new Date(leitura.data_leitura);
+            let tableHTML = `
+                <div style="overflow-x: auto; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); color: white;">
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-calendar"></i> Data/Hora</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-flask"></i> pH</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-tint"></i> Umidade</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-thermometer-half"></i> Temperatura</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-bolt"></i> Condutividade</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-water"></i> Salinidade</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-leaf"></i> NPK</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-seedling"></i> Micronutrientes</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-percentage"></i> Mat. Orgânica</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-weight"></i> Densidade</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-satellite-dish"></i> Dispositivo</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-map-marker"></i> Setor</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-signal"></i> Sinal</th>
+                                <th style="padding: 1rem; text-align: left; font-weight: 600;"><i class="fas fa-battery-half"></i> Bateria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            if (leituras.length > 0) {
+                leituras.forEach((leitura, index) => {
+                    const data = new Date(leitura.data_leitura);
+                    const npk = leitura.NPK || {};
+                    const micro = leitura.micronutrientes || {};
+                    const locSensor = leitura.localizacao_sensor || {};
+                    
+                    // Formatação de NPK
+                    const npkStr = `N:${Number(npk.nitrogenio || 0).toFixed(0)} P:${Number(npk.fosforo || 0).toFixed(0)} K:${Number(npk.potassio || 0).toFixed(0)}`;
+                    
+                    // Formatação de micronutrientes
+                    const microStr = `Ca:${Number(micro.calcio || 0).toFixed(0)} Mg:${Number(micro.magnesio || 0).toFixed(0)} S:${Number(micro.enxofre || 0).toFixed(0)}`;
+                    
+                    // Formatação do setor
+                    const setorStr = `${locSensor.setor || 'N/A'} (${locSensor.profundidade_cm || 0}cm)`;
+                    
+                    // Cores alternadas para as linhas
+                    const bgColor = index % 2 === 0 ? '#f8f9fa' : 'white';
+                    
+                    tableHTML += `
+                        <tr style="border-bottom: 1px solid #eee; background-color: ${bgColor};" onmouseover="this.style.backgroundColor='#e8f5e8'" onmouseout="this.style.backgroundColor='${bgColor}'">
+                            <td style="padding: 1rem; font-size: 0.9rem;">${data.toLocaleString('pt-BR')}</td>
+                            <td style="padding: 1rem; font-weight: 600; color: ${Number(leitura.ph || leitura.pH || 0) >= 6.0 && Number(leitura.ph || leitura.pH || 0) <= 7.0 ? '#4caf50' : '#ff9800'};">${Number(leitura.ph || leitura.pH || 0).toFixed(1)}</td>
+                            <td style="padding: 1rem; font-weight: 600; color: ${Number(leitura.umidade || 0) >= 60 && Number(leitura.umidade || 0) <= 80 ? '#4caf50' : '#ff9800'};">${Number(leitura.umidade || 0).toFixed(1)}%</td>
+                            <td style="padding: 1rem; font-weight: 600; color: ${Number(leitura.temperatura || 0) >= 20 && Number(leitura.temperatura || 0) <= 30 ? '#4caf50' : '#ff9800'};">${Number(leitura.temperatura || 0).toFixed(1)}°C</td>
+                            <td style="padding: 1rem;">${Number(leitura.condutividade_eletrica || 0).toFixed(2)} mS/cm</td>
+                            <td style="padding: 1rem;">${Number(leitura.salinidade || 0).toFixed(2)} ppt</td>
+                            <td style="padding: 1rem; font-size: 0.9rem; font-family: 'Inter', sans-serif;">${npkStr}</td>
+                            <td style="padding: 1rem; font-size: 0.9rem; font-family: 'Inter', sans-serif;">${microStr}</td>
+                            <td style="padding: 1rem;">${Number(leitura.materia_organica_pct || 0).toFixed(1)}%</td>
+                            <td style="padding: 1rem;">${Number(leitura.densidade_solo || 0).toFixed(2)} g/cm³</td>
+                            <td style="padding: 1rem; font-size: 0.85rem;">${leitura.dispositivo || 'N/A'}</td>
+                            <td style="padding: 1rem; font-size: 0.85rem;">${setorStr}</td>
+                            <td style="padding: 1rem;">
+                                <span style="padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem; font-weight: 600; 
+                                    ${leitura.qualidade_sinal === 'Excelente' ? 'background: #e8f5e8; color: #2e7d32;' : 
+                                      leitura.qualidade_sinal === 'Boa' ? 'background: #fff3e0; color: #f57c00;' : 
+                                      'background: #ffebee; color: #c62828;'}">
+                                    ${leitura.qualidade_sinal || 'N/A'}
+                                </span>
+                            </td>
+                            <td style="padding: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <div style="width: 30px; height: 6px; background: #eee; border-radius: 3px; overflow: hidden;">
+                                        <div style="width: ${leitura.bateria_sensor_pct || 0}%; height: 100%; background: ${(leitura.bateria_sensor_pct || 0) > 50 ? '#4caf50' : (leitura.bateria_sensor_pct || 0) > 20 ? '#ff9800' : '#f44336'}; transition: width 0.3s ease;"></div>
+                                    </div>
+                                    <span style="font-size: 0.85rem; font-weight: 600;">${leitura.bateria_sensor_pct || 0}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            tableHTML += '</tbody></table></div>';
+            
+            // Adicionar resumo estatístico
+            if (leituras.length > 0) {
+                const avgPh = (leituras.reduce((sum, l) => sum + Number(l.ph || l.pH || 0), 0) / leituras.length).toFixed(1);
+                const avgUmidade = (leituras.reduce((sum, l) => sum + Number(l.umidade || 0), 0) / leituras.length).toFixed(1);
+                const avgTemp = (leituras.reduce((sum, l) => sum + Number(l.temperatura || 0), 0) / leituras.length).toFixed(1);
                 
-                // Formatar micronutrientes
-                const micro = leitura.micronutrientes || {};
-                const microStr = `Ca:${(micro.calcio || 0).toFixed(0)} Mg:${(micro.magnesio || 0).toFixed(0)} S:${(micro.enxofre || 0).toFixed(0)}`;
-                
-                // Formatar localização do sensor
-                const locSensor = leitura.localizacao_sensor || {};
-                const sensorStr = `${locSensor.setor || 'N/A'} - ${locSensor.profundidade_cm || 0}cm`;
-                
-                tr.innerHTML = `
-                    <td>${data.toLocaleString('pt-BR')}</td>
-                    <td>${Number(leitura.ph || leitura.pH || 0).toFixed(1)}</td>
-                    <td>${Number(leitura.umidade).toFixed(1)}%</td>
-                    <td>${Number(leitura.temperatura).toFixed(1)}°C</td>
-                    <td>${Number(leitura.condutividade_eletrica).toFixed(2)}</td>
-                    <td>${Number(leitura.salinidade).toFixed(2)}</td>
-                    <td>${typeof leitura.NPK === 'object' ? `N:${(leitura.NPK.nitrogenio || 0).toFixed(0)} P:${(leitura.NPK.fosforo || 0).toFixed(0)} K:${(leitura.NPK.potassio || 0).toFixed(0)}` : Number(leitura.NPK || 0).toFixed(2)}</td>
-                    <td>${microStr}</td>
-                    <td>${Number(leitura.materia_organica_pct || 0).toFixed(1)}%</td>
-                    <td>${Number(leitura.densidade_solo || 0).toFixed(2)}</td>
-                    <td>${leitura.qualidade_sinal || 'N/A'}</td>
-                    <td>${leitura.bateria_sensor_pct || 0}%</td>
-                    <td>${sensorStr}</td>
+                tableHTML += `
+                    <div style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, #f8f9fa, #e9ecef); border-radius: 12px; border-left: 4px solid var(--primary-green);">
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-chart-bar"></i> Resumo Estatístico (${leituras.length} leituras)
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; font-size: 0.9rem;">
+                            <p><strong>pH Médio:</strong> ${avgPh}</p>
+                            <p><strong>Umidade Média:</strong> ${avgUmidade}%</p>
+                            <p><strong>Temperatura Média:</strong> ${avgTemp}°C</p>
+                            <p><strong>Primeira Leitura:</strong> ${new Date(leituras[leituras.length - 1].data_leitura).toLocaleDateString('pt-BR')}</p>
+                            <p><strong>Última Leitura:</strong> ${new Date(leituras[0].data_leitura).toLocaleDateString('pt-BR')}</p>
+                        </div>
+                    </div>
                 `;
-                tbody.appendChild(tr);
-            });
+            }
+            
+            document.getElementById('readings-content').innerHTML = tableHTML;
         }
 
-        function limparTabelaLeituras() {
-            const tbody = document.querySelector("#tabelaLeituras tbody");
-            tbody.innerHTML = '<tr><td colspan="13" style="text-align: center; color: #666;">Carregando dados...</td></tr>';
-        }
-
-        async function carregarDiagnostico(userId) {
+        async function loadAIContent(userId) {
             try {
-                const response = await fetch(`${baseUrl}/diagnostico/${userId}`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(`${baseUrl}/diagnostico/${userId}`, {
+                    signal: controller.signal,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                clearTimeout(timeoutId);
+                
                 if (!response.ok) {
-                    document.getElementById('diagnostico-content').innerHTML = 
-                        '<div class="diagnostico-item critico">Erro ao carregar diagnóstico</div>';
-                    return;
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
                 const diagnostico = await response.json();
-                exibirDiagnostico(diagnostico);
+                const analise = diagnostico.analise_atual || {};
+                
+                let aiHTML = `
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div style="background: linear-gradient(135deg, ${analise.cor_indicador === 'verde' ? '#e8f5e8, #c8e6c8' : analise.cor_indicador === 'amarelo' ? '#fff3e0, #ffe0b3' : '#ffebee, #ffcdd2'}); padding: 2rem; border-radius: 12px; border-left: 4px solid ${analise.cor_indicador === 'verde' ? '#4caf50' : analise.cor_indicador === 'amarelo' ? '#ff9800' : '#f44336'};">
+                            <h3 style="color: ${analise.cor_indicador === 'verde' ? '#2e7d32' : analise.cor_indicador === 'amarelo' ? '#f57c00' : '#c62828'}; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-${analise.cor_indicador === 'verde' ? 'check-circle' : analise.cor_indicador === 'amarelo' ? 'exclamation-triangle' : 'times-circle'}"></i>
+                                Status Geral do Solo
+                            </h3>
+                            <div style="text-align: center; margin-bottom: 1rem;">
+                                <div style="font-size: 3rem; font-weight: bold; color: ${analise.cor_indicador === 'verde' ? '#2e7d32' : analise.cor_indicador === 'amarelo' ? '#f57c00' : '#c62828'}; margin-bottom: 0.5rem;">
+                                    ${analise.score || 0}/100
+                                </div>
+                                <div style="font-size: 1.2rem; font-weight: 600; color: ${analise.cor_indicador === 'verde' ? '#2e7d32' : analise.cor_indicador === 'amarelo' ? '#f57c00' : '#c62828'};">
+                                    ${analise.status_geral || 'Analisando...'}
+                                </div>
+                            </div>
+                        </div>
+                `;
+                
+                if (analise.diagnosticos && analise.diagnosticos.length > 0) {
+                    aiHTML += `
+                        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #ff9800;">
+                            <h3 style="color: #f57c00; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-exclamation-triangle"></i> Diagnósticos Identificados
+                            </h3>
+                            <div style="space-y: 1rem;">
+                    `;
+                    analise.diagnosticos.forEach(diag => {
+                        aiHTML += `
+                            <div style="padding: 1rem; background: #fff3e0; border-radius: 8px; border-left: 3px solid #ff9800; margin-bottom: 1rem;">
+                                <i class="fas fa-warning" style="color: #f57c00; margin-right: 0.5rem;"></i>
+                                ${diag}
+                            </div>
+                        `;
+                    });
+                    aiHTML += '</div></div>';
+                }
+                
+                if (analise.sugestoes && analise.sugestoes.length > 0) {
+                    aiHTML += `
+                        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #4caf50;">
+                            <h3 style="color: #2e7d32; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-lightbulb"></i> Sugestões de Melhoria
+                            </h3>
+                            <div style="space-y: 1rem;">
+                    `;
+                    analise.sugestoes.forEach(sug => {
+                        aiHTML += `
+                            <div style="padding: 1rem; background: #e8f5e8; border-radius: 8px; border-left: 3px solid #4caf50; margin-bottom: 1rem;">
+                                <i class="fas fa-lightbulb" style="color: #2e7d32; margin-right: 0.5rem;"></i>
+                                ${sug}
+                            </div>
+                        `;
+                    });
+                    aiHTML += '</div></div>';
+                }
+                
+                aiHTML += '</div>';
+                
+                // Adicionar análise rápida
+                try {
+                    const rapidResponse = await fetch(`${baseUrl}/analise-rapida/${userId}`);
+                    if (rapidResponse.ok) {
+                        const rapidData = await rapidResponse.json();
+                        aiHTML += `
+                            <div style="margin-top: 2rem; background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 2rem; border-radius: 12px; border-left: 4px solid #2196f3;">
+                                <h3 style="color: #1976d2; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                    <i class="fas fa-bolt"></i> Análise Rápida
+                                </h3>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.9rem;">
+                                    <p><strong>Fazenda:</strong> ${rapidData.fazenda || 'N/A'}</p>
+                                    <p><strong>Cultivo:</strong> ${rapidData.cultivo || 'N/A'}</p>
+                                    <p><strong>Data da Leitura:</strong> ${rapidData.leitura_data ? new Date(rapidData.leitura_data).toLocaleDateString('pt-BR') : 'N/A'}</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                } catch (e) {
+                    // Ignorar erro da análise rápida
+                }
+                
+                document.getElementById('ai-content').innerHTML = aiHTML;
                 
             } catch (error) {
-                document.getElementById('diagnostico-content').innerHTML = 
-                    '<div class="diagnostico-item critico">Erro de conexão</div>';
+                console.error('Erro na IA:', error);
+                let errorMessage = 'Sistema de diagnóstico temporariamente indisponível';
+                
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Timeout na conexão com o sistema de IA';
+                } else if (error.message.includes('HTTP')) {
+                    errorMessage = `Erro do servidor: ${error.message}`;
+                }
+                
+                showError('ai-content', errorMessage);
             }
         }
 
-        function exibirDiagnostico(diagnostico) {
-            const container = document.getElementById('diagnostico-content');
-            const analise = diagnostico.analise_atual;
+        function loadHeatmapContent(perfil) {
+            const leituras = perfil.leituras_solo || [];
             
-            let html = `
-                <div class="diagnostico-item ${analise.cor_indicador === 'verde' ? 'ok' : analise.cor_indicador === 'amarelo' ? 'atencao' : 'critico'}">
-                    <strong>Status: ${analise.status_geral}</strong> (${analise.score}/100)
+            if (leituras.length === 0) {
+                showEmpty('heatmap-content', 'Não há leituras suficientes para gerar mapas de calor');
+                return;
+            }
+            
+            if (leituras.length < 3) {
+                document.getElementById('heatmap-content').innerHTML = `
+                    <div style="background: #fff3e0; padding: 2rem; border-radius: 12px; border-left: 4px solid #ff9800; text-align: center;">
+                        <i class="fas fa-info-circle" style="font-size: 2rem; color: #f57c00; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #f57c00; margin-bottom: 0.5rem;">Dados Limitados</h3>
+                        <p style="color: #666;">Apenas ${leituras.length} leitura(s) disponível(is). Mapas de calor funcionam melhor com mais dados.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let heatmapHTML = `
+                <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+                    <h3 style="color: var(--primary-green); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-sliders-h"></i> Controles do Mapa de Calor
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                        <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--gray-200); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--gray-800); display: block; margin-bottom: 0.75rem; font-size: 0.95rem;">Parâmetro de Análise</label>
+                            <select id="heatmap-parameter" onchange="updateHeatmapView()" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: 'Inter', sans-serif; background: white; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <option value="ph">pH do Solo</option>
+                                <option value="umidade">Umidade (%)</option>
+                                <option value="temperatura">Temperatura (°C)</option>
+                                <option value="condutividade">Condutividade Elétrica</option>
+                                <option value="salinidade">Salinidade</option>
+                                <option value="npk">NPK Total</option>
+                            </select>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.8); padding: 1.5rem; border-radius: 16px; border: 1px solid var(--gray-200); box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--gray-800); display: block; margin-bottom: 0.75rem; font-size: 0.95rem;">Período de Tempo</label>
+                            <select id="heatmap-period" onchange="updateHeatmapView()" style="width: 100%; padding: 0.75rem 1rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 1rem; font-family: 'Inter', sans-serif; background: white; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                                <option value="latest">Última Leitura</option>
+                                <option value="week">Última Semana</option>
+                                <option value="month">Último Mês</option>
+                                <option value="all">Todas as Leituras</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
+                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-map"></i> <span id="heatmap-title-text">Mapa de pH por Setor</span>
+                        </h4>
+                        <div style="position: relative; height: 300px; margin-bottom: 1rem; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="heatmapChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                        </div>
+                        <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                <span style="width: 16px; height: 16px; border-radius: 3px; background: #ff4444;"></span>
+                                <span>Crítico</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                <span style="width: 16px; height: 16px; border-radius: 3px; background: #ffaa00;"></span>
+                                <span>Atenção</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                                <span style="width: 16px; height: 16px; border-radius: 3px; background: #00aa00;"></span>
+                                <span>Ideal</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <h4 style="color: var(--primary-green); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-chart-line"></i> Evolução Temporal
+                        </h4>
+                        <div style="position: relative; height: 300px; background: #f8f9fa; border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                            <canvas id="timelineChart" style="max-width: 100%; max-height: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; background: linear-gradient(135deg, #e8f5e8, #c8e6c8); padding: 2rem; border-radius: 12px; border-left: 4px solid var(--primary-green);">
+                    <h4 style="color: var(--primary-green); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-info-circle"></i> Análise dos Setores
+                    </h4>
+                    <div id="sector-analysis">
+                        <p style="color: #666; font-style: italic;">Selecione um parâmetro para ver a análise detalhada por setor.</p>
+                    </div>
                 </div>
             `;
             
-            if (analise.diagnosticos && analise.diagnosticos.length > 0) {
-                html += '<h4>Diagnósticos:</h4>';
-                analise.diagnosticos.forEach(diag => {
-                    html += `<div class="diagnostico-item atencao">⚠️ ${diag}</div>`;
-                });
-            }
+            document.getElementById('heatmap-content').innerHTML = heatmapHTML;
             
-            if (analise.sugestoes && analise.sugestoes.length > 0) {
-                html += '<h4>Sugestões:</h4>';
-                analise.sugestoes.forEach(sug => {
-                    html += `<div class="sugestao-item">💡 ${sug}</div>`;
-                });
-            }
+            // Armazenar dados para os gráficos
+            window.currentHeatmapData = leituras;
             
-            container.innerHTML = html;
+            // Inicializar gráficos e visualização
+            setTimeout(() => {
+                initializeCharts();
+                updateHeatmapView();
+            }, 200);
         }
-
-        function atualizarStatusCards(leituras) {
-            if (!leituras || leituras.length === 0) return;
+        
+        // Variáveis globais para os gráficos
+        let heatmapChart = null;
+        let timelineChart = null;
+        
+        function initializeCharts() {
+            const heatmapCanvas = document.getElementById('heatmapChart');
+            const timelineCanvas = document.getElementById('timelineChart');
             
-            const ultimaLeitura = leituras[0];
+            if (!heatmapCanvas || !timelineCanvas) return;
             
-            // Atualizar valores
-            document.getElementById('ph-value').textContent = Number(ultimaLeitura.pH || 0).toFixed(1);
-            document.getElementById('umidade-value').textContent = Number(ultimaLeitura.umidade || 0).toFixed(1) + '%';
-            document.getElementById('temp-value').textContent = Number(ultimaLeitura.temperatura || 0).toFixed(1) + '°C';
-            
-            // Atualizar cores dos cards
-            const phCard = document.querySelector('.status-card:nth-child(1)');
-            const umidadeCard = document.querySelector('.status-card:nth-child(2)');
-            const tempCard = document.querySelector('.status-card:nth-child(3)');
-            
-            // pH: ideal 6.0-7.0
-            const ph = Number(ultimaLeitura.pH || 0);
-            if (ph >= 6.0 && ph <= 7.0) {
-                phCard.className = 'status-card status-ok';
-            } else if (ph >= 5.5 && ph <= 7.5) {
-                phCard.className = 'status-card status-warning';
-            } else {
-                phCard.className = 'status-card status-critical';
+            // Destruir gráficos existentes
+            if (heatmapChart) {
+                heatmapChart.destroy();
+                heatmapChart = null;
+            }
+            if (timelineChart) {
+                timelineChart.destroy();
+                timelineChart = null;
             }
             
-            // Umidade: ideal 60-80%
-            const umidade = Number(ultimaLeitura.umidade || 0);
-            if (umidade >= 60 && umidade <= 80) {
-                umidadeCard.className = 'status-card status-ok';
-            } else if (umidade >= 40 && umidade <= 90) {
-                umidadeCard.className = 'status-card status-warning';
-            } else {
-                umidadeCard.className = 'status-card status-critical';
-            }
-            
-            // Temperatura: ideal 20-30°C
-            const temp = Number(ultimaLeitura.temperatura || 0);
-            if (temp >= 20 && temp <= 30) {
-                tempCard.className = 'status-card status-ok';
-            } else if (temp >= 15 && temp <= 35) {
-                tempCard.className = 'status-card status-warning';
-            } else {
-                tempCard.className = 'status-card status-critical';
-            }
-        }
-
-        // Adicionar evento Enter no campo de busca
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('userId').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    buscarPerfil();
+            // Criar gráfico de dispersão para heatmap
+            heatmapChart = new Chart(heatmapCanvas.getContext('2d'), {
+                type: 'scatter',
+                data: {
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    const point = context[0].raw;
+                                    return `${point.setor || 'Setor'}`;
+                                },
+                                label: function(context) {
+                                    const point = context.raw;
+                                    return [
+                                        `Valor: ${point.valor?.toFixed(2) || 'N/A'}`,
+                                        `Profundidade: ${point.profundidade || 0}cm`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'category',
+                            title: {
+                                display: true,
+                                text: 'Setores da Fazenda'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Profundidade (cm)'
+                            },
+                            reverse: true
+                        }
+                    }
                 }
             });
-        });
+            
+            // Criar gráfico de linha temporal
+            timelineChart = new Chart(timelineCanvas.getContext('2d'), {
+                type: 'line',
+                data: {
+                    datasets: []
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Data'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Valor'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function updateHeatmapView() {
+            if (!window.currentHeatmapData) return;
+            
+            const parametro = document.getElementById('heatmap-parameter')?.value || 'ph';
+            const periodo = document.getElementById('heatmap-period')?.value || 'latest';
+            
+            // Atualizar título
+            const titulos = {
+                'ph': 'Mapa de pH por Setor',
+                'umidade': 'Mapa de Umidade por Setor',
+                'temperatura': 'Mapa de Temperatura por Setor',
+                'condutividade': 'Mapa de Condutividade por Setor',
+                'salinidade': 'Mapa de Salinidade por Setor',
+                'npk': 'Mapa de NPK por Setor'
+            };
+            
+            const titleElement = document.getElementById('heatmap-title-text');
+            if (titleElement) {
+                titleElement.textContent = titulos[parametro] || 'Mapa de Calor';
+            }
+            
+            // Filtrar dados por período
+            let dadosFiltrados = window.currentHeatmapData;
+            if (periodo !== 'all') {
+                const agora = new Date();
+                let dataLimite;
+                
+                switch(periodo) {
+                    case 'latest':
+                        dadosFiltrados = [window.currentHeatmapData[0]];
+                        break;
+                    case 'week':
+                        dataLimite = new Date(agora.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        break;
+                    case 'month':
+                        dataLimite = new Date(agora.getTime() - 30 * 24 * 60 * 60 * 1000);
+                        break;
+                }
+                
+                if (dataLimite) {
+                    dadosFiltrados = window.currentHeatmapData.filter(leitura => {
+                        const dataLeitura = new Date(leitura.data_leitura);
+                        return dataLeitura >= dataLimite;
+                    });
+                }
+            }
+            
+            // Processar dados para heatmap
+            const dadosHeatmap = [];
+            const dadosTimeline = [];
+            const setorData = {};
+            
+            dadosFiltrados.forEach(leitura => {
+                const setor = leitura.localizacao_sensor?.setor || 'Setor N/A';
+                const profundidade = leitura.localizacao_sensor?.profundidade_cm || 20;
+                
+                let valor = 0;
+                switch(parametro) {
+                    case 'ph':
+                        valor = Number(leitura.pH || leitura.ph || 0);
+                        break;
+                    case 'umidade':
+                        valor = Number(leitura.umidade || 0);
+                        break;
+                    case 'temperatura':
+                        valor = Number(leitura.temperatura || 0);
+                        break;
+                    case 'condutividade':
+                        valor = Number(leitura.condutividade_eletrica || 0);
+                        break;
+                    case 'salinidade':
+                        valor = Number(leitura.salinidade || 0);
+                        break;
+                    case 'npk':
+                        const npk = leitura.NPK || {};
+                        valor = (npk.nitrogenio || 0) + (npk.fosforo || 0) + (npk.potassio || 0);
+                        break;
+                }
+                
+                // Dados para heatmap
+                dadosHeatmap.push({
+                    x: setor,
+                    y: profundidade,
+                    valor: valor,
+                    setor: setor,
+                    profundidade: profundidade
+                });
+                
+                // Dados para timeline
+                dadosTimeline.push({
+                    x: new Date(leitura.data_leitura),
+                    y: valor
+                });
+                
+                // Dados para análise por setor
+                if (!setorData[setor]) setorData[setor] = [];
+                setorData[setor].push(valor);
+            });
+            
+            // Atualizar gráfico heatmap
+            if (heatmapChart && dadosHeatmap.length > 0) {
+                const cores = dadosHeatmap.map(ponto => getColorByValue(ponto.valor, parametro));
+                
+                heatmapChart.data = {
+                    datasets: [{
+                        label: parametro.toUpperCase(),
+                        data: dadosHeatmap,
+                        backgroundColor: cores,
+                        borderColor: cores,
+                        pointRadius: 8,
+                        pointHoverRadius: 12
+                    }]
+                };
+                
+                heatmapChart.update();
+            }
+            
+            // Atualizar gráfico timeline
+            if (timelineChart && dadosTimeline.length > 0) {
+                const unidades = {
+                    'ph': '',
+                    'umidade': '%',
+                    'temperatura': '°C',
+                    'condutividade': 'mS/cm',
+                    'salinidade': 'ppt',
+                    'npk': 'ppm'
+                };
+                
+                // Ordenar por data
+                dadosTimeline.sort((a, b) => a.x - b.x);
+                
+                timelineChart.data = {
+                    datasets: [{
+                        label: `${parametro.toUpperCase()} ${unidades[parametro]}`,
+                        data: dadosTimeline,
+                        borderColor: 'rgb(46, 125, 50)',
+                        backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                };
+                
+                timelineChart.options.scales.y.title.text = `${parametro.toUpperCase()} (${unidades[parametro]})`;
+                timelineChart.update();
+            }
+            
+            // Gerar análise por setor
+            let analysisHTML = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">';
+            
+            Object.keys(setorData).forEach(setor => {
+                const valores = setorData[setor];
+                const media = (valores.reduce((a, b) => a + b, 0) / valores.length).toFixed(2);
+                const min = Math.min(...valores).toFixed(2);
+                const max = Math.max(...valores).toFixed(2);
+                
+                // Determinar cor baseada no parâmetro
+                const cor = getColorByValue(parseFloat(media), parametro);
+                
+                analysisHTML += `
+                    <div style="background: white; padding: 1rem; border-radius: 8px; border-left: 3px solid ${cor};">
+                        <h5 style="color: ${cor}; margin-bottom: 0.5rem;">${setor}</h5>
+                        <p style="font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>Média:</strong> ${media}</p>
+                        <p style="font-size: 0.85rem; margin-bottom: 0.3rem;"><strong>Mín:</strong> ${min}</p>
+                        <p style="font-size: 0.85rem;"><strong>Máx:</strong> ${max}</p>
+                        <p style="font-size: 0.85rem;"><strong>Leituras:</strong> ${valores.length}</p>
+                    </div>
+                `;
+            });
+            
+            analysisHTML += '</div>';
+            
+            const analysisElement = document.getElementById('sector-analysis');
+            if (analysisElement) {
+                analysisElement.innerHTML = analysisHTML;
+            }
+        }
+        
+        function getColorByValue(valor, parametro) {
+            let cor = '#00aa00'; // Verde (ideal)
+            
+            switch(parametro) {
+                case 'ph':
+                    if (valor < 5.5 || valor > 7.5) cor = '#ff4444'; // Vermelho (crítico)
+                    else if (valor < 6.0 || valor > 7.0) cor = '#ffaa00'; // Amarelo (atenção)
+                    break;
+                case 'umidade':
+                    if (valor < 40 || valor > 90) cor = '#ff4444';
+                    else if (valor < 60 || valor > 80) cor = '#ffaa00';
+                    break;
+                case 'temperatura':
+                    if (valor < 15 || valor > 35) cor = '#ff4444';
+                    else if (valor < 20 || valor > 30) cor = '#ffaa00';
+                    break;
+                case 'condutividade':
+                    if (valor > 2.0) cor = '#ff4444';
+                    else if (valor > 1.5) cor = '#ffaa00';
+                    break;
+                case 'salinidade':
+                    if (valor > 0.5) cor = '#ff4444';
+                    else if (valor > 0.3) cor = '#ffaa00';
+                    break;
+                case 'npk':
+                    if (valor < 100) cor = '#ff4444';
+                    else if (valor < 200) cor = '#ffaa00';
+                    break;
+            }
+            
+            return cor;
+        }
+
+
     </script>
 </body>
 </html>

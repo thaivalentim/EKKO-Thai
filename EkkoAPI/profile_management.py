@@ -15,13 +15,23 @@ if not MONGO_URI:
     raise ValueError("MONGO_URI não encontrada no arquivo .env")
 
 try:
-    client = MongoClient(MONGO_URI)
-    client.admin.command('ping')
+    client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
+    # Teste de conexão opcional - não bloqueia a inicialização
+    try:
+        client.admin.command('ping')
+        print("✅ MongoDB conectado com sucesso")
+    except Exception as ping_error:
+        print(f"⚠️ Aviso: Problema na conexão MongoDB: {ping_error}")
+        print("API iniciará mesmo assim - conexão será testada nas requisições")
+    
     db = client[MONGO_DB_NAME]
     usuarios_collection = db["usuarios"]
 except Exception as e:
-    print(f"Erro ao conectar com MongoDB: {e}")
-    raise
+    print(f"❌ Erro crítico ao configurar MongoDB: {e}")
+    # Não levanta exceção para permitir que a API inicie
+    client = None
+    db = None
+    usuarios_collection = None
 
 router = APIRouter()
 
@@ -36,6 +46,8 @@ def serialize_user(user) -> dict:
 
 @router.get("/perfil/{usuario_id}")
 def visualizar_perfil(usuario_id: str):
+    if not client:
+        raise HTTPException(status_code=503, detail="Banco de dados indisponível")
     try:
         if not ObjectId.is_valid(usuario_id):
             raise HTTPException(status_code=400, detail="ID inválido")
@@ -83,6 +95,8 @@ def visualizar_perfil(usuario_id: str):
 
 @router.put("/perfil/{usuario_id}")
 def atualizar_perfil(usuario_id: str, dados: UsuarioUpdate):
+    if not client:
+        raise HTTPException(status_code=503, detail="Banco de dados indisponível")
     try:
         if not ObjectId.is_valid(usuario_id):
             raise HTTPException(status_code=400, detail="ID inválido")

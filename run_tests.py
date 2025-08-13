@@ -5,7 +5,6 @@ import sys
 import os
 
 def instalar_pytest():
-    """Instala pytest se não estiver disponível"""
     try:
         import pytest
         return True
@@ -15,7 +14,6 @@ def instalar_pytest():
         return True
 
 def executar_testes():
-    """Executa todos os testes"""
     if not instalar_pytest():
         return False
     
@@ -63,7 +61,7 @@ def verificar_api():
     return False
 
 if __name__ == "__main__":
-    print("🌱 EKKO Thai - Execução de Testes")
+    print("🌱 EKKO - Execução de Testes")
     print("="*40)
     
     verificar_api()

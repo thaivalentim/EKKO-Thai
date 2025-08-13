@@ -8,20 +8,20 @@ def verificar_dependencias():
     """Verifica se as dependências estão instaladas"""
     try:
         import fastapi, uvicorn, pymongo, dotenv
-        print("✅ Dependências verificadas")
+        print("[OK] Dependencias verificadas")
         return True
     except ImportError as e:
-        print(f"❌ Dependência faltando: {e}")
+        print(f"[ERRO] Dependencia faltando: {e}")
         print("Execute: pip install -r requirements.txt")
         return False
 
 def verificar_env():
     """Verifica se o arquivo .env existe"""
     if os.path.exists('.env'):
-        print("✅ Arquivo .env encontrado")
+        print("[OK] Arquivo .env encontrado")
         return True
     else:
-        print("❌ Arquivo .env não encontrado")
+        print("[ERRO] Arquivo .env nao encontrado")
         print("Crie um arquivo .env com MONGO_URI=sua_string_de_conexao")
         return False
 
@@ -30,7 +30,7 @@ def iniciar_api():
     if not verificar_dependencias() or not verificar_env():
         return False
     
-    print("🚀 Iniciando API EKKO...")
+    print("[START] Iniciando API EKKO...")
     try:
         subprocess.run([
             sys.executable, "-m", "uvicorn", 
@@ -40,9 +40,9 @@ def iniciar_api():
             "--port", "8000"
         ])
     except KeyboardInterrupt:
-        print("\n⏹️ API interrompida")
+        print("\n[STOP] API interrompida")
     except Exception as e:
-        print(f"❌ Erro: {e}")
+        print(f"[ERRO] Erro: {e}")
         return False
     
     return True

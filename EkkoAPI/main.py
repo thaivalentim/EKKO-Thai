@@ -18,21 +18,36 @@ if not MONGO_URI:
     raise ValueError("MONGO_URI não encontrada no arquivo .env")
 
 try:
-    client = MongoClient(MONGO_URI)
-    client.admin.command('ping')
+    client = MongoClient(MONGO_URI, tlsAllowInvalidCertificates=True)
+    try:
+        client.admin.command('ping')
+        print("✅ MongoDB conectado com sucesso")
+    except Exception as ping_error:
+        print(f"⚠️ Aviso: Problema na conexão MongoDB: {ping_error}")
+        print("API iniciará mesmo assim")
+    
     db = client[MONGO_DB_NAME]
     usuarios_collection = db["usuarios"]
 except Exception as e:
-    print(f"Erro ao conectar com MongoDB: {e}")
-    raise
+    print(f"❌ Erro crítico MongoDB: {e}")
+    client = None
+    db = None
+    usuarios_collection = None
 
 app = FastAPI(title="API Ekko")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000", 
+        "http://localhost:8080",
+        "http://127.0.0.1:8080",
+        "file://",
+        "*"
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -52,7 +67,12 @@ class Usuario(BaseModel):
 
 @app.get("/")
 def root():
-    return {"mensagem": "API Ekko está online!"}
+    print("🔍 Endpoint raiz acessado")
+    return {
+        "mensagem": "API Ekko está online!", 
+        "status": "running",
+        "mongodb": "connected" if db else "disconnected"
+    }
 
 @app.get("/usuarios", response_model=List[dict])
 def listar_usuarios():
@@ -74,20 +94,24 @@ def criar_usuario(usuario: Usuario):
 
 @app.get("/usuarios/{usuario_id}", response_model=dict)
 def obter_usuario(usuario_id: str):
+    print(f"🔍 Buscando usuário: {usuario_id}")
     try:
         if not ObjectId.is_valid(usuario_id):
             raise HTTPException(status_code=400, detail="ID inválido")
         usuario = usuarios_collection.find_one({"_id": ObjectId(usuario_id)})
         if not usuario:
             raise HTTPException(status_code=404, detail="Usuário não encontrado")
+        print(f"✅ Usuário encontrado: {usuario.get('nome', 'N/A')}")
         return serialize_user(usuario)
     except HTTPException:
         raise
     except Exception as e:
+        print(f"❌ Erro ao obter usuário: {e}")
         raise HTTPException(status_code=500, detail=f"Erro ao obter usuário: {str(e)}")
 
 @app.get("/diagnostico/{usuario_id}", response_model=dict)
 def obter_diagnostico_solo(usuario_id: str):
+    print(f"🤖 Gerando diagnóstico para: {usuario_id}")
     try:
         if not ObjectId.is_valid(usuario_id):
             raise HTTPException(status_code=400, detail="ID inválido")
