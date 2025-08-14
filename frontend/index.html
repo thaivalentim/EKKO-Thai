@@ -418,6 +418,54 @@
                 padding: 1rem;
             }
         }
+        
+        @media (max-width: 1200px) {
+            /* Ajustar grid do perfil para telas menores */
+            #profile-content > div:first-child {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            #profile-content > div:first-child > div:last-child {
+                grid-column: 1 / -1;
+            }
+            
+            /* Ajustar campos técnicos para tablet */
+            #technical-fields {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            
+            #technical-fields > div:last-child {
+                grid-column: 1 / -1;
+            }
+            
+            /* Dashboard responsivo para tablet */
+            #dashboard-content > div:first-child {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            /* Uma coluna para telas pequenas */
+            #profile-content > div:first-child {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Ajustar campos técnicos para mobile */
+            #technical-fields {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            /* Dashboard responsivo */
+            #dashboard-content > div:nth-child(2) {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Micronutrientes em mobile */
+            #dashboard-content .micronutrientes-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -823,139 +871,183 @@
             const micro = ultimaLeitura.micronutrientes || {};
             
             document.getElementById('dashboard-content').innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
-                    <!-- Card Usuário -->
-                    <div style="background: linear-gradient(135deg, rgba(5, 150, 105, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(5, 150, 105, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                <!-- Métricas Principais -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid var(--primary-green); text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary-green); margin-bottom: 0.5rem;">${Number(ultimaLeitura.pH || ultimaLeitura.ph || 0).toFixed(1)}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray-600); font-weight: 500;">pH do Solo</div>
+                        <div style="font-size: 0.8rem; color: ${Number(ultimaLeitura.pH || ultimaLeitura.ph || 0) >= 6.0 && Number(ultimaLeitura.pH || ultimaLeitura.ph || 0) <= 7.0 ? 'var(--primary-green)' : 'var(--orange)'}; margin-top: 0.25rem;">${Number(ultimaLeitura.pH || ultimaLeitura.ph || 0) >= 6.0 && Number(ultimaLeitura.pH || ultimaLeitura.ph || 0) <= 7.0 ? '✓ Ideal' : '⚠ Atenção'}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid var(--tech-blue); text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--tech-blue); margin-bottom: 0.5rem;">${Number(ultimaLeitura.umidade || 0).toFixed(0)}%</div>
+                        <div style="font-size: 0.9rem; color: var(--gray-600); font-weight: 500;">Umidade</div>
+                        <div style="font-size: 0.8rem; color: ${Number(ultimaLeitura.umidade || 0) >= 60 && Number(ultimaLeitura.umidade || 0) <= 80 ? 'var(--primary-green)' : 'var(--orange)'}; margin-top: 0.25rem;">${Number(ultimaLeitura.umidade || 0) >= 60 && Number(ultimaLeitura.umidade || 0) <= 80 ? '✓ Ideal' : '⚠ Atenção'}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid var(--orange); text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--orange); margin-bottom: 0.5rem;">${Number(ultimaLeitura.temperatura || 0).toFixed(0)}°C</div>
+                        <div style="font-size: 0.9rem; color: var(--gray-600); font-weight: 500;">Temperatura</div>
+                        <div style="font-size: 0.8rem; color: ${Number(ultimaLeitura.temperatura || 0) >= 20 && Number(ultimaLeitura.temperatura || 0) <= 30 ? 'var(--primary-green)' : 'var(--orange)'}; margin-top: 0.25rem;">${Number(ultimaLeitura.temperatura || 0) >= 20 && Number(ultimaLeitura.temperatura || 0) <= 30 ? '✓ Ideal' : '⚠ Atenção'}</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-left: 4px solid var(--purple); text-align: center;">
+                        <div style="font-size: 2.5rem; font-weight: 700; color: var(--purple); margin-bottom: 0.5rem;">${leituras.length}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray-600); font-weight: 500;">Total Leituras</div>
+                        <div style="font-size: 0.8rem; color: var(--gray-500); margin-top: 0.25rem;">Histórico completo</div>
+                    </div>
+                </div>
+                
+                <!-- Informações Detalhadas -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <!-- Card Usuário e Propriedade -->
+                    <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <!-- Header do Card -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--gray-100);">
+                            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem;">
                                 <i class="fas fa-user-circle"></i>
                             </div>
-                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">${perfil.nome}</h3>
-                        </div>
-                        <div style="space-y: 0.75rem; font-size: 0.95rem; color: var(--gray-700);">
-                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-tractor" style="color: var(--primary-green); width: 16px;"></i> <strong>Fazenda:</strong> ${perfil.nome_fazenda || 'N/A'}</p>
-                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-envelope" style="color: var(--primary-green); width: 16px;"></i> <strong>Email:</strong> ${perfil.email}</p>
-                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-user-tag" style="color: var(--primary-green); width: 16px;"></i> <strong>Papel:</strong> ${perfil.papel}</p>
-                            <p style="margin: 0.5rem 0; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-phone" style="color: var(--primary-green); width: 16px;"></i> <strong>Telefone:</strong> ${perfil.telefone || 'N/A'}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Card Última Leitura -->
-                    <div style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(251, 191, 36, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--amber), var(--orange)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
-                                <i class="fas fa-flask"></i>
+                            <div>
+                                <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.4rem; font-weight: 600;">${perfil.nome}</h3>
+                                <p style="color: var(--gray-600); margin: 0.25rem 0 0 0; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-tractor" style="color: var(--primary-green); font-size: 0.9rem;"></i> ${perfil.nome_fazenda || 'Fazenda não informada'}</p>
                             </div>
-                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Última Leitura</h3>
                         </div>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem; color: var(--gray-700);">
-                            <div class="tooltip" data-tooltip="Acidez/alcalinidade do solo (ideal: 6.0-7.0)" style="padding: 0.75rem; border-radius: 8px;"><strong>pH:</strong> ${Number(ultimaLeitura.pH || ultimaLeitura.ph || 0).toFixed(1)}</div>
-                            <div class="tooltip" data-tooltip="Percentual de água no solo (ideal: 60-80%)" style="padding: 0.75rem; border-radius: 8px;"><strong>Umidade:</strong> ${Number(ultimaLeitura.umidade || 0).toFixed(1)}%</div>
-                            <div class="tooltip" data-tooltip="Temperatura do solo em graus Celsius (ideal: 20-30°C)" style="padding: 0.75rem; border-radius: 8px;"><strong>Temp:</strong> ${Number(ultimaLeitura.temperatura || 0).toFixed(1)}°C</div>
-                            <div class="tooltip" data-tooltip="Capacidade de conduzir eletricidade (mS/cm)" style="padding: 0.75rem; border-radius: 8px;"><strong>Condutiv:</strong> ${Number(ultimaLeitura.condutividade_eletrica || 0).toFixed(2)}</div>
+                        
+                        <!-- Dados Pessoais -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--gray-800); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-address-card" style="color: var(--tech-blue); font-size: 1rem;"></i> Dados Pessoais
+                            </h4>
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-envelope" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Email:</strong> ${perfil.email}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-user-tag" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Papel:</strong> ${perfil.papel}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-phone" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Telefone:</strong> ${perfil.telefone || 'N/A'}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-map-marker-alt" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Localização:</strong> ${perfil.localizacao?.cidade || 'N/A'}, ${perfil.localizacao?.estado || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dados da Propriedade -->
+                        <div>
+                            <h4 style="color: var(--gray-800); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-home" style="color: var(--orange); font-size: 1rem;"></i> Propriedade
+                            </h4>
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-expand-arrows-alt" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Área Total:</strong> ${perfil.propriedade?.area_total_hectares || 0} ha</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-seedling" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Área Cultivada:</strong> ${perfil.propriedade?.area_cultivada_hectares || 0} ha</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-leaf" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Cultivo Principal:</strong> ${perfil.propriedade?.cultivo_principal || 'N/A'}</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <i class="fas fa-mountain" style="color: var(--gray-500); width: 16px; text-align: center;"></i>
+                                    <span style="font-size: 0.9rem; color: var(--gray-700);"><strong>Tipo de Solo:</strong> ${perfil.propriedade?.tipo_solo || 'N/A'}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Card NPK -->
-                    <div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 197, 253, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(59, 130, 246, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--tech-blue), var(--indigo)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
+                    <!-- Card NPK e Micronutrientes -->
+                    <div style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                        <!-- Header do Card -->
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid var(--gray-100);">
+                            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); border-radius: 16px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.4rem;">
                                 <i class="fas fa-leaf"></i>
                             </div>
-                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">NPK & Nutrientes</h3>
-                        </div>
-                        <div style="font-size: 0.9rem; color: var(--gray-700); space-y: 0.5rem;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1);">
-                                <span class="tooltip" data-tooltip="Nutriente essencial para crescimento vegetativo"><strong>Nitrogênio:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${Number(npk.nitrogenio || 0).toFixed(1)} ppm</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.1);">
-                                <span class="tooltip" data-tooltip="Nutriente essencial para desenvolvimento radicular"><strong>Fósforo:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${Number(npk.fosforo || 0).toFixed(1)} ppm</span>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0;">
-                                <span class="tooltip" data-tooltip="Nutriente essencial para floração e frutificação"><strong>Potássio:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${Number(npk.potassio || 0).toFixed(1)} ppm</span>
+                            <div>
+                                <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.4rem; font-weight: 600;">Nutrientes</h3>
+                                <p style="color: var(--gray-600); margin: 0.25rem 0 0 0; font-size: 0.95rem;">NPK e Micronutrientes</p>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Card Estatísticas -->
-                    <div style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(196, 181, 253, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(139, 92, 246, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--purple), var(--indigo)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
-                                <i class="fas fa-chart-bar"></i>
+                        
+                        <!-- NPK Principal -->
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="color: var(--gray-800); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-flask" style="color: var(--primary-green); font-size: 1rem;"></i> NPK Principal
+                            </h4>
+                            <div style="display: grid; gap: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: linear-gradient(135deg, rgba(5, 150, 105, 0.05), rgba(5, 150, 105, 0.02)); border-radius: 8px; border-left: 3px solid var(--primary-green);">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700);"><i class="fas fa-seedling" style="color: var(--primary-green); font-size: 0.9rem;"></i> Nitrogênio</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--primary-green); font-size: 1rem;">${Number(npk.nitrogenio || 0).toFixed(1)} ppm</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.02)); border-radius: 8px; border-left: 3px solid var(--tech-blue);">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700);"><i class="fas fa-tree" style="color: var(--tech-blue); font-size: 0.9rem;"></i> Fósforo</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--tech-blue); font-size: 1rem;">${Number(npk.fosforo || 0).toFixed(1)} ppm</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: linear-gradient(135deg, rgba(245, 158, 11, 0.05), rgba(245, 158, 11, 0.02)); border-radius: 8px; border-left: 3px solid var(--orange);">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700);"><i class="fas fa-apple-alt" style="color: var(--orange); font-size: 0.9rem;"></i> Potássio</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--orange); font-size: 1rem;">${Number(npk.potassio || 0).toFixed(1)} ppm</span>
+                                </div>
                             </div>
-                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Estatísticas</h3>
                         </div>
-                        <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-700); space-y: 0.75rem;">
-                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
-                                <span><strong>Total de Leituras:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600; color: var(--purple);">${leituras.length}</span>
+                        
+                        <!-- Micronutrientes -->
+                        <div>
+                            <h4 style="color: var(--gray-800); margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-atom" style="color: var(--purple); font-size: 1rem;"></i> Micronutrientes
+                            </h4>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700); font-size: 0.85rem;"><i class="fas fa-circle" style="color: var(--teal); font-size: 0.7rem;"></i> Cálcio</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--gray-800); font-size: 0.9rem;">${Number(micro.calcio || 0).toFixed(0)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700); font-size: 0.85rem;"><i class="fas fa-circle" style="color: var(--pink); font-size: 0.7rem;"></i> Magnésio</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--gray-800); font-size: 0.9rem;">${Number(micro.magnesio || 0).toFixed(0)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700); font-size: 0.85rem;"><i class="fas fa-circle" style="color: var(--amber); font-size: 0.7rem;"></i> Enxofre</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--gray-800); font-size: 0.9rem;">${Number(micro.enxofre || 0).toFixed(0)}</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: var(--gray-50); border-radius: 8px;">
+                                    <span style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; color: var(--gray-700); font-size: 0.85rem;"><i class="fas fa-circle" style="color: var(--indigo); font-size: 0.7rem;"></i> M. Orgânica</span>
+                                    <span style="font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--gray-800); font-size: 0.9rem;">${Number(ultimaLeitura.materia_organica_pct || 0).toFixed(1)}%</span>
+                                </div>
                             </div>
-                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
-                                <span><strong>Área Total:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${perfil.propriedade?.area_total_hectares || 0} ha</span>
-                            </div>
-                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
-                                <span><strong>Área Cultivada:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600;">${perfil.propriedade?.area_cultivada_hectares || 0} ha</span>
-                            </div>
-                            <p style="margin: 0.5rem 0;"><strong>Cultivo Principal:</strong> ${perfil.propriedade?.cultivo_principal || 'N/A'}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Card Localização -->
-                    <div style="background: linear-gradient(135deg, rgba(20, 184, 166, 0.1) 0%, rgba(94, 234, 212, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(20, 184, 166, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--teal), var(--cyan)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
-                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Localização</h3>
-                        </div>
-                        <div style="font-size: 0.95rem; color: var(--gray-700); space-y: 0.75rem;">
-                            <p style="margin: 0.5rem 0;"><strong>Cidade:</strong> ${perfil.localizacao?.cidade || 'N/A'}</p>
-                            <p style="margin: 0.5rem 0;"><strong>Estado:</strong> ${perfil.localizacao?.estado || 'N/A'}</p>
-                            <p style="margin: 0.5rem 0;"><strong>Região:</strong> ${perfil.localizacao?.regiao || 'N/A'}</p>
-                            <p style="margin: 0.5rem 0;"><strong>CEP:</strong> ${perfil.localizacao?.cep || 'N/A'}</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Card Dados Técnicos -->
-                    <div style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.1) 0%, rgba(251, 207, 232, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(236, 72, 153, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease;" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
-                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--pink), var(--purple)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
-                                <i class="fas fa-cogs"></i>
-                            </div>
-                            <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Dados Técnicos</h3>
-                        </div>
-                        <div style="font-family: 'Inter', sans-serif; font-size: 0.95rem; color: var(--gray-700); space-y: 0.75rem;">
-                            <div style="margin: 0.5rem 0; display: flex; justify-content: space-between; align-items: center;">
-                                <span><strong>Experiência:</strong></span>
-                                <span style="font-family: 'Inter', sans-serif; font-weight: 600; color: var(--pink);">${perfil.dados_tecnicos?.experiencia_anos || 0} anos</span>
-                            </div>
-                            <p style="margin: 0.5rem 0;"><strong>Nível Tecnológico:</strong> ${perfil.dados_tecnicos?.nivel_tecnologia || 'N/A'}</p>
-                            <p style="margin: 0.5rem 0;"><strong>Tipo de Solo:</strong> ${perfil.propriedade?.tipo_solo || 'N/A'}</p>
                         </div>
                     </div>
                 </div>
                 
                 ${ultimaLeitura.dispositivo ? `
-                <!-- Card Sensor -->
-                <div style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(6, 182, 212, 0.1) 0%, rgba(165, 243, 252, 0.05) 100%); padding: 2rem; border-radius: 20px; border: 1px solid rgba(6, 182, 212, 0.1); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); margin-top: 1rem;">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-                        <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--cyan), var(--tech-blue)); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.25rem;">
-                            <i class="fas fa-satellite-dish"></i>
+                <!-- Informações do Sensor -->
+                <div style="background: linear-gradient(135deg, var(--gray-50), var(--white)); padding: 2rem; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--gray-200);">
+                    <h4 style="color: var(--gray-800); margin-bottom: 1.5rem; font-size: 1.2rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-satellite-dish" style="color: var(--cyan);"></i> Status do Sensor
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem;">
+                        <div style="text-align: center; padding: 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--cyan); margin-bottom: 0.5rem;">${ultimaLeitura.bateria_sensor_pct || 0}%</div>
+                            <div style="font-size: 0.9rem; color: var(--gray-600);">Bateria</div>
                         </div>
-                        <h3 style="font-family: 'Poppins', sans-serif; color: var(--gray-900); margin: 0; font-size: 1.25rem; font-weight: 600;">Informações do Sensor</h3>
-                    </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; font-size: 0.95rem; color: var(--gray-700);">
-                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Dispositivo:</strong> <span style="font-family: 'JetBrains Mono', monospace;">${ultimaLeitura.dispositivo || 'N/A'}</span></div>
-                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Setor:</strong> ${ultimaLeitura.localizacao_sensor?.setor || 'N/A'}</div>
-                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Profundidade:</strong> ${ultimaLeitura.localizacao_sensor?.profundidade_cm || 0} cm</div>
-                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Qualidade Sinal:</strong> ${ultimaLeitura.qualidade_sinal || 'N/A'}</div>
-                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Bateria:</strong> ${ultimaLeitura.bateria_sensor_pct || 0}%</div>
-                        <div style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 12px;"><strong>Densidade Solo:</strong> ${Number(ultimaLeitura.densidade_solo || 0).toFixed(2)} g/cm³</div>
+                        <div style="text-align: center; padding: 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.2rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.5rem;">${ultimaLeitura.qualidade_sinal || 'N/A'}</div>
+                            <div style="font-size: 0.9rem; color: var(--gray-600);">Sinal</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.2rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.5rem;">${ultimaLeitura.localizacao_sensor?.setor || 'N/A'}</div>
+                            <div style="font-size: 0.9rem; color: var(--gray-600);">Setor</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <div style="font-size: 1.2rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.5rem;">${ultimaLeitura.localizacao_sensor?.profundidade_cm || 0} cm</div>
+                            <div style="font-size: 0.9rem; color: var(--gray-600);">Profundidade</div>
+                        </div>
                     </div>
                 </div>
                 ` : ''}
@@ -970,69 +1062,74 @@
             const dataCadastro = perfil.data_cadastro ? new Date(perfil.data_cadastro).toLocaleDateString('pt-BR') : 'N/A';
             
             document.getElementById('profile-content').innerHTML = `
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
                     <!-- Dados Pessoais -->
-                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--primary-green);">
-                        <h3 style="color: var(--primary-green); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="background: white; padding: 1.75rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--primary-green);">
+                        <h3 style="color: var(--primary-green); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
                             <i class="fas fa-user-circle"></i> Dados Pessoais
                         </h3>
-                        <div style="space-y: 0.8rem;">
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-user" style="width: 20px; color: #666;"></i> <strong>Nome:</strong> ${perfil.nome || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-envelope" style="width: 20px; color: #666;"></i> <strong>Email:</strong> ${perfil.email || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-id-card" style="width: 20px; color: #666;"></i> <strong>CPF:</strong> ${perfil.cpf || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-phone" style="width: 20px; color: #666;"></i> <strong>Telefone:</strong> ${perfil.telefone || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-birthday-cake" style="width: 20px; color: #666;"></i> <strong>Data Nascimento:</strong> ${dataNascimento}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-user-tag" style="width: 20px; color: #666;"></i> <strong>Papel:</strong> ${perfil.papel || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-calendar-plus" style="width: 20px; color: #666;"></i> <strong>Data Cadastro:</strong> ${dataCadastro}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-check-circle" style="width: 20px; color: #666;"></i> <strong>Status:</strong> ${perfil.status || 'ativo'}</p>
+                        <div style="space-y: 0.7rem;">
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-user" style="width: 18px; color: #666;"></i> <strong>Nome:</strong> ${perfil.nome || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-envelope" style="width: 18px; color: #666;"></i> <strong>Email:</strong> ${perfil.email || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-id-card" style="width: 18px; color: #666;"></i> <strong>CPF:</strong> ${perfil.cpf || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-phone" style="width: 18px; color: #666;"></i> <strong>Telefone:</strong> ${perfil.telefone || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-birthday-cake" style="width: 18px; color: #666;"></i> <strong>Data Nascimento:</strong> ${dataNascimento}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-user-tag" style="width: 18px; color: #666;"></i> <strong>Papel:</strong> ${perfil.papel || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-calendar-plus" style="width: 18px; color: #666;"></i> <strong>Data Cadastro:</strong> ${dataCadastro}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-check-circle" style="width: 18px; color: #666;"></i> <strong>Status:</strong> ${perfil.status || 'ativo'}</p>
                         </div>
                     </div>
                     
                     <!-- Localização -->
-                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #ff9800;">
-                        <h3 style="color: #ff9800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="background: white; padding: 1.75rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #ff9800;">
+                        <h3 style="color: #ff9800; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
                             <i class="fas fa-map-marker-alt"></i> Localização
                         </h3>
-                        <div style="space-y: 0.8rem;">
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-road" style="width: 20px; color: #666;"></i> <strong>Endereço:</strong> ${loc.endereco || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-city" style="width: 20px; color: #666;"></i> <strong>Cidade:</strong> ${loc.cidade || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-flag" style="width: 20px; color: #666;"></i> <strong>Estado:</strong> ${loc.estado || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-globe-americas" style="width: 20px; color: #666;"></i> <strong>Região:</strong> ${loc.regiao || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-mail-bulk" style="width: 20px; color: #666;"></i> <strong>CEP:</strong> ${loc.cep || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-crosshairs" style="width: 20px; color: #666;"></i> <strong>Latitude:</strong> ${loc.coordenadas?.latitude ? Number(loc.coordenadas.latitude).toFixed(6) : 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-crosshairs" style="width: 20px; color: #666;"></i> <strong>Longitude:</strong> ${loc.coordenadas?.longitude ? Number(loc.coordenadas.longitude).toFixed(6) : 'N/A'}</p>
+                        <div style="space-y: 0.7rem;">
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-road" style="width: 18px; color: #666;"></i> <strong>Endereço:</strong> ${loc.endereco || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-city" style="width: 18px; color: #666;"></i> <strong>Cidade:</strong> ${loc.cidade || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-flag" style="width: 18px; color: #666;"></i> <strong>Estado:</strong> ${loc.estado || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-globe-americas" style="width: 18px; color: #666;"></i> <strong>Região:</strong> ${loc.regiao || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-mail-bulk" style="width: 18px; color: #666;"></i> <strong>CEP:</strong> ${loc.cep || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-crosshairs" style="width: 18px; color: #666;"></i> <strong>Latitude:</strong> ${loc.coordenadas?.latitude ? Number(loc.coordenadas.latitude).toFixed(6) : 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-crosshairs" style="width: 18px; color: #666;"></i> <strong>Longitude:</strong> ${loc.coordenadas?.longitude ? Number(loc.coordenadas.longitude).toFixed(6) : 'N/A'}</p>
                         </div>
                     </div>
                     
                     <!-- Propriedade -->
-                    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--tech-blue);">
-                        <h3 style="color: var(--tech-blue); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <div style="background: white; padding: 1.75rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid var(--tech-blue);">
+                        <h3 style="color: var(--tech-blue); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem;">
                             <i class="fas fa-tractor"></i> Propriedade
                         </h3>
-                        <div style="space-y: 0.8rem;">
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-home" style="width: 20px; color: #666;"></i> <strong>Nome da Fazenda:</strong> ${perfil.nome_fazenda || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-expand-arrows-alt" style="width: 20px; color: #666;"></i> <strong>Área Total:</strong> ${prop.area_total_hectares || 0} hectares</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-seedling" style="width: 20px; color: #666;"></i> <strong>Área Cultivada:</strong> ${prop.area_cultivada_hectares || 0} hectares</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-leaf" style="width: 20px; color: #666;"></i> <strong>Cultivo Principal:</strong> ${prop.cultivo_principal || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-list" style="width: 20px; color: #666;"></i> <strong>Cultivos Secundários:</strong> ${Array.isArray(prop.cultivos_secundarios) ? prop.cultivos_secundarios.join(', ') || 'Nenhum' : 'Nenhum'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-mountain" style="width: 20px; color: #666;"></i> <strong>Tipo de Solo:</strong> ${prop.tipo_solo || 'N/A'}</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-tint" style="width: 20px; color: #666;"></i> <strong>Sistema de Irrigação:</strong> ${prop.sistema_irrigacao || 'N/A'}</p>
+                        <div style="space-y: 0.7rem;">
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-home" style="width: 18px; color: #666;"></i> <strong>Nome da Fazenda:</strong> ${perfil.nome_fazenda || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-expand-arrows-alt" style="width: 18px; color: #666;"></i> <strong>Área Total:</strong> ${prop.area_total_hectares || 0} hectares</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-seedling" style="width: 18px; color: #666;"></i> <strong>Área Cultivada:</strong> ${prop.area_cultivada_hectares || 0} hectares</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-leaf" style="width: 18px; color: #666;"></i> <strong>Cultivo Principal:</strong> ${prop.cultivo_principal || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-list" style="width: 18px; color: #666;"></i> <strong>Cultivos Secundários:</strong> ${Array.isArray(prop.cultivos_secundarios) ? prop.cultivos_secundarios.join(', ') || 'Nenhum' : 'Nenhum'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-mountain" style="width: 18px; color: #666;"></i> <strong>Tipo de Solo:</strong> ${prop.tipo_solo || 'N/A'}</p>
+                            <p style="margin-bottom: 0.7rem; font-size: 0.9rem;"><i class="fas fa-tint" style="width: 18px; color: #666;"></i> <strong>Sistema de Irrigação:</strong> ${prop.sistema_irrigacao || 'N/A'}</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Dados Técnicos - Card largo -->
-                <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #4caf50; margin-top: 2rem;">
+                <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #4caf50;">
                     <h3 style="color: #4caf50; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
                         <i class="fas fa-cogs"></i> Dados Técnicos
                     </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; text-align: center;" id="technical-fields">
                         <div>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-clock" style="width: 20px; color: #666;"></i> <strong>Experiência:</strong> ${tecnico.experiencia_anos || 0} anos</p>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-chart-line" style="width: 20px; color: #666;"></i> <strong>Nível Tecnológico:</strong> ${tecnico.nivel_tecnologia || 'N/A'}</p>
+                            <div style="font-weight: 500; color: var(--gray-600); font-size: 0.9rem; margin-bottom: 0.5rem;">Experiência</div>
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.1rem; color: var(--gray-900);">${tecnico.experiencia_anos || 0} anos</div>
                         </div>
                         <div>
-                            <p style="margin-bottom: 0.8rem;"><i class="fas fa-certificate" style="width: 20px; color: #666;"></i> <strong>Certificações:</strong> ${Array.isArray(tecnico.certificacoes) ? tecnico.certificacoes.join(', ') || 'Nenhuma' : 'Nenhuma'}</p>
+                            <div style="font-weight: 500; color: var(--gray-600); font-size: 0.9rem; margin-bottom: 0.5rem;">Nível Tecnológico</div>
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.1rem; color: var(--gray-900);">${tecnico.nivel_tecnologia || 'N/A'}</div>
+                        </div>
+                        <div>
+                            <div style="font-weight: 500; color: var(--gray-600); font-size: 0.9rem; margin-bottom: 0.5rem;">Certificações</div>
+                            <div style="font-family: 'Inter', sans-serif; font-weight: 600; font-size: 1.1rem; color: var(--gray-900);">${Array.isArray(tecnico.certificacoes) ? tecnico.certificacoes.join(', ') || 'Nenhuma' : 'Nenhuma'}</div>
                         </div>
                     </div>
                 </div>
