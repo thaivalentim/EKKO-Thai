@@ -1,4 +1,4 @@
-# 🌱 EKKO Thai - Sistema de Monitoramento de Solo Inteligente
+# 🌱 EKKO - Sistema de Monitoramento de Solo Inteligente
 
 Sistema completo para análise de solo em tempo real com IA para agricultura de precisão.
 
